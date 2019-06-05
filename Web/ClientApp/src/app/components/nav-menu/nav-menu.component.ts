@@ -7,7 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class NavMenuComponent {
   isExpanded = false;
-  @Input() title: string;
 
   constructor() {
   }

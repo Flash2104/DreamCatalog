@@ -1,22 +1,20 @@
 <header>
-  {{title}}
-  <nav class='navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3'>
-    <div class="container">
-      <a class="navbar-brand" [routerLink]='["/"]'>Web</a>
-      <button type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded" (click)="toggle()">
-        <!-- <span class="fa fa-reorder"></span> -->
-      </button>
-      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]='{"visible": isExpanded}'>
-        <ul class="navbar-nav flex-grow">
-          <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/"]'>Home</a>
+  <nav class='navbar navbar-expand navbar-toggleable navbar-light border'>
+    <div class="container-fluid">
+      <a class="navbar-brand" [routerLink]='["/"]'>Test</a>
+      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button> -->
+      <div class="navbar-collapse collapse d-sm-inline-flex">
+        <ul class="navbar-nav nav-pills flex-grow">
+          <li class="nav-item">
+            <a class="nav-link text-dark" [routerLink]='["/"]' >Домой</a>
           </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/counter"]'>Counter</a>
+          <li class="nav-item">
+            <a class="nav-link text-dark" [routerLink]='["/catalog"]' routerLinkActive="active">Каталог</a>
           </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/fetch-data"]'>Fetch data</a>
+          <li class="nav-item" *ngIf="false">
+            <a class="nav-link text-dark" [routerLink]='["/editor"]' routerLinkActive="active">Редактирование</a>
           </li>
         </ul>
       </div>
