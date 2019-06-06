@@ -1,32 +1,51 @@
+
+export interface ICategoryTreeView {
+  isLoading: boolean;
+  isProcessing: boolean;
+  isWriting: boolean;
+
+  data: ICategoryModel[];
+}
+
 export interface ICategoryModel {
   id: number;
-  title: string;
+  name: string;
   description: string;
   children: ICategoryModel[];
 }
 
+export interface ICategoryRequestModel {
+  id: number;
+}
 
-const TEST_DATA: ICategoryModel[] = [
+export const initialState: ICategoryTreeView = {
+  isLoading: false,
+  isProcessing: false,
+  isWriting: false,
+  data: []
+};
+
+export const TEST_DATA: ICategoryModel[] = [
   {
     id: 1,
-    title: 'Fruit',
+    name: 'Fruit',
     description: '',
     children: [
       {
         id: 4,
-        title: 'Apple',
+        name: 'Apple',
         description: '',
         children: []
       },
       {
         id: 5,
-        title: 'Banana',
+        name: 'Banana',
         description: '',
         children: []
       },
       {
         id: 6,
-        title: 'Fruit loops',
+        name: 'Fruit loops',
         description: '',
         children: []
       },
@@ -34,43 +53,43 @@ const TEST_DATA: ICategoryModel[] = [
   },
   {
     id: 2,
-    title: 'Vegetables',
+    name: 'Vegetables',
     description: '',
     children: [
       {
         id: 7,
-        title: 'Green',
+        name: 'Green',
         description: '',
         children: [
           {
             id: 8,
-            title: 'Broccoli',
+            name: 'Broccoli',
             description: '',
             children: []
           },
           {
             id: 9,
             description: '',
-            title: 'Brussel sprouts',
+            name: 'Brussel sprouts',
             children: []
           },
         ]
       },
       {
         id: 3,
-        title: 'Orange',
+        name: 'Orange',
         description: '',
         children: [
           {
             id: 10,
-            title: 'Pumpkins',
+            name: 'Pumpkins',
             description: '',
             children: []
           },
           {
             id: 11,
             description: '',
-            title: 'Carrots',
+            name: 'Carrots',
             children: []
           },
         ]

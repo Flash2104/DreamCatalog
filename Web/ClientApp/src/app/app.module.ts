@@ -7,10 +7,15 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
-import { CounterComponent } from './components/counter/counter.component';
-import { FetchDataComponent } from './components/fetch-data/fetch-data.component';
 import { CatalogComponent } from './components/catalog/catalog.component';
 import { EditorComponent } from './components/editor/editor.component';
+import { CdkTreeModule } from '@angular/cdk/tree';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule, MatButtonToggleModule, MatExpansionModule } from '@angular/material';
+import { StoreModule } from '@ngrx/store';
+import { StoreRootModule } from './store/storeRootModule';
+import { CategoryEffects } from './store/category/category.effects';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -24,10 +29,20 @@ import { EditorComponent } from './components/editor/editor.component';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    CdkTreeModule,
+    MatTreeModule,
+    MatIconModule,
+    MatExpansionModule,
+
+    StoreModule.forRoot(StoreRootModule.model),
+    EffectsModule.forRoot([
+      CategoryEffects
+    ]),
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      { path: 'home', component: HomeComponent },
       { path: 'catalog', component: CatalogComponent },
-      { path: 'editor', component:  EditorComponent}
+      { path: 'editor', component: EditorComponent }
     ])
   ],
   providers: [],

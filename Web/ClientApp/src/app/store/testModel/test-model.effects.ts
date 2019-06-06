@@ -16,7 +16,7 @@ export class TestModelEffects {
   ) { }
 
   @Effect()
-  loadMovies$ = this.actions$
+  loadTest$ = this.actions$
     .pipe(
       ofType(TestModelActionTypes.Load),
       mergeMap((action: TestModelLoadAction) => this._srv.get(action.payload)),
