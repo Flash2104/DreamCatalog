@@ -16,6 +16,8 @@ import { StoreModule } from '@ngrx/store';
 import { StoreRootModule } from './store/storeRootModule';
 import { CategoryEffects } from './store/category/category.effects';
 import { EffectsModule } from '@ngrx/effects';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductInfoComponent } from './components/product-info/product-info.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { EffectsModule } from '@ngrx/effects';
     NavMenuComponent,
     HomeComponent,
     CatalogComponent,
-    EditorComponent
+    EditorComponent,
+    ProductListComponent,
+    ProductInfoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -41,7 +45,11 @@ import { EffectsModule } from '@ngrx/effects';
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
-      { path: 'catalog', component: CatalogComponent },
+      { path: 'catalog', component: CatalogComponent, children:[
+        {path: ':catalogId/products', component: ProductListComponent, children: [
+          { path: 'product/:productId', component: ProductInfoComponent }
+        ]}
+      ] },
       { path: 'editor', component: EditorComponent }
     ])
   ],
