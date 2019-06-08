@@ -1,8 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BaseDestroyComponent } from '../BaseDestroyComponent';
-import { Observable, of } from 'rxjs';
-import { IProductListView, IProductViewModel, TEST_PRODUCTS } from 'src/app/store/product/product.model';
+import { Observable } from 'rxjs';
+import { IProductViewModel } from 'src/app/store/product/product.model';
+import { ProductListService } from 'src/app/store/product/product-list.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-product-list',
@@ -12,10 +15,14 @@ import { IProductListView, IProductViewModel, TEST_PRODUCTS } from 'src/app/stor
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
   catalogId: number;
+  displayedColumns: string[] = ['id', 'title', 'price', 'quantity'];
+  dataSource: MatTableDataSource<IProductViewModel>;
 
-  products$: Observable<IProductViewModel[]>;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private productListService: ProductListService) {
     super();
   }
 
@@ -24,6 +31,13 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
     .pipe(this.takeUntilDestroyed())
     .subscribe(pm => this.catalogId = +pm.get('catalogId'));
 
-    this.products$ = of(TEST_PRODUCTS);
+    this.productListService.get()
+    .pipe(this.takeUntilDestroyed())
+    .subscribe(p =>
+      {
+         this.dataSource = new MatTableDataSource(p);
+         this.dataSource.sort = this.sort;
+        });
+    
   }
 }

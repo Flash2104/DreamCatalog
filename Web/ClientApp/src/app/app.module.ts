@@ -11,8 +11,9 @@ import { CatalogComponent } from './components/catalog/catalog.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTreeModule } from '@angular/material/tree';
-import { MatIconModule, MatButtonToggleModule, MatExpansionModule } from '@angular/material';
+import { MatTableModule, MatSortModule, MatIconModule, MatExpansionModule } from '@angular/material';
 import { StoreModule } from '@ngrx/store';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { StoreRootModule } from './store/storeRootModule';
 import { CategoryEffects } from './store/category/category.effects';
 import { EffectsModule } from '@ngrx/effects';
@@ -37,7 +38,9 @@ import { ProductInfoComponent } from './components/product-info/product-info.com
     MatTreeModule,
     MatIconModule,
     MatExpansionModule,
-
+    MatTableModule,
+    MatSortModule,
+    BrowserAnimationsModule,
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([
       CategoryEffects

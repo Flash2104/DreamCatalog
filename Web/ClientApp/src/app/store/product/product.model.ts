@@ -8,25 +8,14 @@ export interface IProductListView {
 
 export interface IProductViewModel {
   id: number;
-  name: string;
+  title: string;
+  price: number;
+  quantity: number;
 }
 
-export interface IProductModel {
-  id: number;
-  name: string;
+export interface IProductModel extends IProductViewModel {
 }
 
 export interface IProductRequestModel {
   id: number;
 }
-
-export const TEST_PRODUCTS: IProductViewModel[] = [
-  {
-    id: 1,
-    name: 'Шапка'
-  },
-  {
-    id: 2,
-    name: 'Брюки'
-  }
-]
