@@ -48,8 +48,8 @@ import { ProductInfoComponent } from './components/product-info/product-info.com
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
-      { path: 'catalog', component: CatalogComponent, children:[
-        {path: ':catalogId/products', component: ProductListComponent, children: [
+      { path: 'category', component: CatalogComponent, children:[
+        {path: ':categoryId/products', component: ProductListComponent, children: [
           { path: 'product/:productId', component: ProductInfoComponent }
         ]}
       ] },

@@ -13,6 +13,10 @@ li:hover {
   cursor: pointer;
 }
 
-.router-link-active {
-	font-weight: bold;
+.list-group-item {
+  background-color: inherit;
+}
+
+.list-group-item:hover {
+  background-color: bisque;
 }

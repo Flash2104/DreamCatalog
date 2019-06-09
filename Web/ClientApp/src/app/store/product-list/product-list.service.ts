@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IProductViewModel } from './product.model';
+import { IProductViewModel, IProductListRequestModel } from './product-list.model';
 import { Observable, of } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -7,7 +7,7 @@ export class ProductListService {
 
   constructor() {  }
 
-  get(): Observable<IProductViewModel[]> {
+  get(request: IProductListRequestModel): Observable<IProductViewModel[]> {
     return of(PRODUCT_LIST);
   }
 }
