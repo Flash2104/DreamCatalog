@@ -42,14 +42,14 @@ export class ProductEffects extends BaseDestroyComponent {
         }
         actions.push(new ProductCreateCompleteAction(res));
       }
-      return actions;
+      return new ProductCreateCompleteAction(res);
     }),
     catchError(error => of(console.log('Ошибка createProduct effect!: ', error)))
   );
 
   @Effect()
   updateProduct$ = this.actions$.pipe(
-    ofType(ProductActionTypes.Load),
+    ofType(ProductActionTypes.Update),
     switchMap((action: ProductUpdateAction) => this._srv.update(action.payload)),
     map((res: IProductModel) => {
       if (res) {

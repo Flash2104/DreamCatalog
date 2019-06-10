@@ -22,6 +22,7 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductInfoComponent } from './components/product-info/product-info.component';
 import { environment } from 'src/environments/environment';
 import { ProductListEffects } from './store/product-list/product-list.effects';
+import { ProductEffects } from './store/product/product.effects';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { ProductListEffects } from './store/product-list/product-list.effects';
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([
       CategoryEffects,
+      ProductEffects,
       ProductListEffects
     ]),
     StoreDevtoolsModule.instrument({

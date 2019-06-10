@@ -25,10 +25,6 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
 
 
   store$ = this._store.select(s => s.productModuleStore);
-  title$: Observable<string> = this._store.select(s => s.productModuleStore.model.title);
-  imageId$: Observable<number> = this._store.select(s => s.productModuleStore.model.imageId);
-  price$: Observable<number> = this._store.select(s => s.productModuleStore.model.price);
-  quantity$: Observable<number> = this._store.select(s => s.productModuleStore.model.quantity);
 
   constructor(
     private route: ActivatedRoute,
@@ -65,7 +61,7 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
         this.takeUntilDestroyed(),
         filter(st => st.model !== null)
       ).subscribe(st => {
-        const patchedValue = { ...st, imageId: this.imageFormControl.value };
+        const patchedValue = { ...st.model, imageId: this.imageFormControl.value };
         this.productForm.patchValue(patchedValue, { emitEvent: false });
       });
   }

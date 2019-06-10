@@ -1,11 +1,15 @@
 <form [formGroup]="productForm">
-  <mat-form-field>
-    <input matInput  type="text" placeholder="Название" formControlName="title">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput  type="number" placeholder="Цена" formControlName="price">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput  type="number" placeholder="Количество" formControlName="quantity">
-  </mat-form-field>
+  <div class="form-group">
+    <label for="title-input">Название</label>
+    <input id="title-input" type="text" class="form-control" formControlName="title">
+    <!-- <small *ngIf="!!errors" *ngFor="let error of errors" class="form-text text-muted" >{{error.message}}</small> -->
+  </div>
+  <div>
+    <label for="price-input">Цена</label>
+    <input id="price-input" type="number" class="form-control" formControlName="price">
+  </div>
+  <div>
+    <label for="quantity-input">Количество</label>
+    <input id="quantity-input" type="number" class="form-control" formControlName="quantity">
+  </div>
 </form>
