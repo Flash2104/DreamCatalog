@@ -8,9 +8,6 @@ export class CategoryService {
   constructor() {
   }
 
-  // get(request: ICategoryRequestModel): Observable<ICategoryModel> {
-  // }
-
   getAll(): Observable<ICategoryModel[]> {
     return of(TEST_DATA)
   }

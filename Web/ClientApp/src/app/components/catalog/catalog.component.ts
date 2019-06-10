@@ -14,6 +14,8 @@ import { BaseDestroyComponent } from '../BaseDestroyComponent';
 })
 export class CatalogComponent extends BaseDestroyComponent implements OnInit {
 
+  volume: number;
+
   store$ = this._store.select(x => x.categoryModuleStore);
   treeControl = new NestedTreeControl<ICategoryModel>(node => node.children);
   dataSource = new MatTreeNestedDataSource<ICategoryModel>();
@@ -28,7 +30,10 @@ export class CatalogComponent extends BaseDestroyComponent implements OnInit {
     this._store.dispatch(new CategoryLoadAllAction());
     this.store$
     .pipe(this.takeUntilDestroyed())
-    .subscribe(catalogView => this.dataSource.data = catalogView.data);
+    .subscribe(catalogView => {
+      this.dataSource.data = catalogView.data;
+      this.volume = catalogView.volume;
+    });
   }
 
   hasChild = (_: number, node: ICategoryModel) => !!node.children && node.children.length > 0;

@@ -1,17 +1,13 @@
 import { Action } from '@ngrx/store';
-import { IProductListRequestModel, IProductModel, IProductViewModel, IProductCreateRequestModel } from './product-list.model';
+import { IProductListRequestModel, IProductViewModel } from './product-list.model';
 
 export enum ProductListActionTypes {
-  Create = "CreateProduct",
-  CreateComplete = "CreateProductComplete",
-  LoadList = "LoadProductList",
-  LoadListComplete = "LoadProductListComplete",
-  Load = "LoadProduct",
-  LoadComplete = "LoadProductComplete"
+  Load = "LoadProductList",
+  LoadComplete = "LoadProductListComplete",
 }
 
 export class ProductListLoadAction implements Action {
-  type = ProductListActionTypes.LoadList;
+  type = ProductListActionTypes.Load;
   payload: IProductListRequestModel;
 
   constructor(payload: IProductListRequestModel) {
@@ -20,7 +16,7 @@ export class ProductListLoadAction implements Action {
 }
 
 export class ProductListLoadCompleteAction implements Action {
-  type = ProductListActionTypes.LoadListComplete;
+  type = ProductListActionTypes.LoadComplete;
   payload: IProductViewModel[];
 
   constructor(payload: IProductViewModel[]) {
@@ -28,39 +24,3 @@ export class ProductListLoadCompleteAction implements Action {
   }
 }
 
-export class ProductLoadAction implements Action {
-  type = ProductListActionTypes.LoadList;
-  payload: number;
-
-  constructor(payload: number) {
-    this.payload = payload;
-  }
-}
-
-export class ProductLoadCompleteAction implements Action {
-  type = ProductListActionTypes.LoadListComplete;
-  payload: IProductModel;
-
-  constructor(payload: IProductModel) {
-    this.payload = payload;
-  }
-}
-
-export class ProductCreateAction implements Action {
-  type = ProductListActionTypes.Create;
-  payload: IProductCreateRequestModel;
-
-  constructor(payload: IProductCreateRequestModel) {
-    this.payload = payload;
-  }
-}
-
-
-export class ProductCreateCompleteAction implements Action {
-  type = ProductListActionTypes.CreateComplete;
-  payload: IProductModel;
-
-  constructor(payload: IProductModel) {
-    this.payload = payload;
-  }
-}

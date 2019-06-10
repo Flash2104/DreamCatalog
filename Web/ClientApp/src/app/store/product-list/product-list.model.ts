@@ -4,17 +4,14 @@ export interface IProductListView {
   isWriting: boolean;
 
   list: IProductViewModel[];
-  current: IProductModel;
 }
 
 export interface IProductViewModel {
   id: number;
   title: string;
+  imageId: number;
   price: number;
   quantity: number;
-}
-
-export interface IProductModel extends IProductViewModel {
 }
 
 export interface IProductListRequestModel {
@@ -23,21 +20,21 @@ export interface IProductListRequestModel {
   skip: number;
 }
 
-export interface IProductCreateRequestModel {
-  title: string;
-  price: number;
-  quantity: number;
+export class ProductListRequestModel implements IProductListRequestModel {
+  categoryId: number;
+  take: number;
+  skip: number;
+
+  constructor(categoryId: number, page: number, volume: number, ) {
+    this.categoryId = categoryId;
+    this.skip = (page - 1) * volume;
+    this.take = volume;
+  }
 }
 
 export const initialState: IProductListView = {
   isLoading: false,
   isProcessing: false,
   isWriting: false,
-  list: [],
-  current: {
-    id: null,
-    price: null,
-    quantity: null,
-    title: ''
-  }
+  list: []
 };

@@ -5,17 +5,21 @@ import { ICategoryTreeView } from './category/category.model';
 import { categoryReducer } from './category/category.reducer';
 import { IProductListView } from './product-list/product-list.model';
 import { productListReducer } from './product-list/product-list.reducer';
+import { IProductView } from './product/product.model';
+import { productReducer } from './product/product.reducer';
 
 export interface IAppStore {
   testModuleStore: ITestModel;
   categoryModuleStore: ICategoryTreeView,
-  productListModuleStore: IProductListView
+  productListModuleStore: IProductListView,
+  productModuleStore: IProductView
 }
 
 export module StoreRootModule {
   export const model: ActionReducerMap<IAppStore> = {
     testModuleStore: testModelReducer,
     categoryModuleStore: categoryReducer,
-    productListModuleStore: productListReducer
+    productListModuleStore: productListReducer,
+    productModuleStore: productReducer
   };
 }

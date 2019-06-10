@@ -1,3 +1,11 @@
-<div>
-  product-info works! productId = {{productId}}
-</div>
+<form [formGroup]="productForm">
+  <mat-form-field>
+    <input matInput  type="text" placeholder="Название" formControlName="title">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput  type="number" placeholder="Цена" formControlName="price">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput  type="number" placeholder="Количество" formControlName="quantity">
+  </mat-form-field>
+</form>

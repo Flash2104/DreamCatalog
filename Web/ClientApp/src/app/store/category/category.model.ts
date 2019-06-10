@@ -1,10 +1,10 @@
-
 export interface ICategoryTreeView {
   isLoading: boolean;
   isProcessing: boolean;
   isWriting: boolean;
 
   data: ICategoryModel[];
+  volume: number;
 }
 
 export interface ICategoryModel {
@@ -22,7 +22,8 @@ export const initialState: ICategoryTreeView = {
   isLoading: false,
   isProcessing: false,
   isWriting: false,
-  data: []
+  data: [],
+  volume: 20
 };
 
 export const TEST_DATA: ICategoryModel[] = [
