@@ -16,6 +16,8 @@ import { filter } from 'rxjs/operators';
 })
 export class ProductInfoComponent extends BaseDestroyComponent implements OnInit {
 
+  productTitle: string;
+
   titleFormControl: FormControl;
   priceFormControl: FormControl;
   quantityFormControl: FormControl;
@@ -61,6 +63,7 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
         this.takeUntilDestroyed(),
         filter(st => st.model !== null)
       ).subscribe(st => {
+        this.productTitle = st.model.title;
         const patchedValue = { ...st.model, imageId: this.imageFormControl.value };
         this.productForm.patchValue(patchedValue, { emitEvent: false });
       });

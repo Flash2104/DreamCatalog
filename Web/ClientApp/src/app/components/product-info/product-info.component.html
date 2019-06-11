@@ -1,15 +1,28 @@
-<form [formGroup]="productForm">
-  <div class="form-group">
-    <label for="title-input">Название</label>
-    <input id="title-input" type="text" class="form-control" formControlName="title">
-    <!-- <small *ngIf="!!errors" *ngFor="let error of errors" class="form-text text-muted" >{{error.message}}</small> -->
-  </div>
-  <div>
-    <label for="price-input">Цена</label>
-    <input id="price-input" type="number" class="form-control" formControlName="price">
-  </div>
-  <div>
-    <label for="quantity-input">Количество</label>
-    <input id="quantity-input" type="number" class="form-control" formControlName="quantity">
-  </div>
-</form>
+<div class="mt-1">
+  <p>
+    Товар {{productTitle}}
+    <button type="button" class="btn btn-outline-danger float-right btn-sm"> <i class="fa fa-close"></i></button>
+  </p>
+</div>
+<div class="mt-1">
+  <button type="button" class="btn btn-outline-success ml-1"> <i class="fa fa-save"></i> Сохранить</button>
+  <button type="button" class="btn btn-outline-secondary ml-1"><i class="fa fa-ban"></i> Отменить</button>
+</div>
+<hr />
+<div>
+  <form [formGroup]="productForm">
+    <div class="form-group">
+      <label for="title-input">Название</label>
+      <input id="title-input" type="text" class="form-control" formControlName="title">
+      <!-- <small *ngIf="!!errors" *ngFor="let error of errors" class="form-text text-muted" >{{error.message}}</small> -->
+    </div>
+    <div>
+      <label for="price-input">Цена</label>
+      <input id="price-input" type="number" class="form-control" formControlName="price">
+    </div>
+    <div>
+      <label for="quantity-input">Количество</label>
+      <input id="quantity-input" type="number" class="form-control" formControlName="quantity">
+    </div>
+  </form>
+</div>

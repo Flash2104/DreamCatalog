@@ -62,7 +62,7 @@ import { ProductEffects } from './store/product/product.effects';
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       { path: 'category', component: CatalogComponent, children:[
-        {path: ':categoryId/:page/:volume/products', component: ProductListComponent, children: [
+        {path: ':categoryId/:page/products', component: ProductListComponent, children: [
           { path: 'product/:productId', component: ProductInfoComponent }
         ]}
       ] },

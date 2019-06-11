@@ -1,5 +1,16 @@
 <div class="row overflow-auto">
   <div class="col border-right">
+    <div class="mt-1">
+      <p>
+        {{categoryTitle}}
+        <button type="button" class="btn btn-outline-danger float-right btn-sm"> <i class="fa fa-close"></i></button>
+      </p>
+    </div>
+    <div class="mt-1">
+      <button type="button" class="btn btn-outline-success ml-1"> <i class="fa fa-save"></i> Сохранить</button>
+      <button type="button" class="btn btn-outline-secondary ml-1"><i class="fa fa-ban"></i> Отменить</button>
+    </div>
+    <hr />
     <table mat-table [dataSource]="dataSource" matSort class="mat-rlrvation-z8 ">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
@@ -26,7 +37,8 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="product/{{row.id}}" routerLinkActive="router-link-active"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="product/{{row.id}}"
+        routerLinkActive="router-link-active"></tr>
     </table>
   </div>
   <div class="col">

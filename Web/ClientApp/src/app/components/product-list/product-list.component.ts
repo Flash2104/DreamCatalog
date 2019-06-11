@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { Store } from '@ngrx/store';
 import { ProductListLoadAction } from 'src/app/store/product-list/product-list.actions';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
@@ -15,6 +16,7 @@ import { ProductListLoadAction } from 'src/app/store/product-list/product-list.a
 })
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
+  categoryTitle: string;
   displayedColumns: string[] = ['id', 'title', 'price', 'quantity'];
   dataSource: MatTableDataSource<IProductViewModel>;
   store$ = this._store.select(s => s.productListModuleStore);
@@ -32,20 +34,22 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
-        const categoryId = +pm.get('categoryId');
-        const page = +pm.get('page');
-        const volume = +pm.get('volume');
-        const request = new ProductListRequestModel(categoryId, page, volume);
-        this._store.dispatch(new ProductListLoadAction(request));
+        // const categoryId = +pm.get('categoryId');
+        // const page = +pm.get('page');
+        const data = pm.get('data');
+        // const request = new ProductListRequestModel(categoryId, page);
+        // this._store.dispatch(new ProductListLoadAction(request));
       });
 
 
 
     this.store$
-      .pipe(this.takeUntilDestroyed())
+      .pipe(this.takeUntilDestroyed(),
+        filter(st => st.list !== null))
       .subscribe(p => {
         this.dataSource = new MatTableDataSource(p.list);
         this.dataSource.sort = this.sort;
+        this.categoryTitle = p.category.name;
       });
 
   }

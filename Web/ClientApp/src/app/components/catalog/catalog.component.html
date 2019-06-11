@@ -4,7 +4,7 @@
         <!-- This is the tree node template for leaf nodes -->
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
           <li class="mat-tree-node nav-item">
-            <a class="nav-link text-dark list-group-item list-group-item-action" routerLink="{{node.id}}/1/{{volume}}/products" routerLinkActive="router-link-active">
+            <a class="nav-link text-dark list-group-item list-group-item-action" routerLink="{{node.id}}/1/products" routerLinkActive="router-link-active">
               {{node.id}}-{{node.name}}
             </a>
           </li>
@@ -18,7 +18,7 @@
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               <!-- </button> -->
-              <a class="nav-link text-dark list-group-item list-group-item-action" routerLink="{{node.id}}/1/{{volume}}/products" routerLinkActive="router-link-active">
+              <a class="nav-link text-dark list-group-item list-group-item-action" routerLink="{{node.id}}/1/products" routerLinkActive="router-link-active">
                 {{node.id}}-{{node.name}}
               </a>
             </div>
