@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ICategoryModel, TEST_DATA, ICategoryRequestModel } from './category.model';
+import { ICategoryModel } from './category.model';
+import { TEST_DATA, ICategoryTreeModel } from '../category-tree/category-tree.model';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
@@ -8,7 +9,30 @@ export class CategoryService {
   constructor() {
   }
 
-  getAll(): Observable<ICategoryModel[]> {
-    return of(TEST_DATA)
+  get(id: number): Observable<ICategoryModel> {
+    return this.getMock(id);
+  }
+
+  private getMock(id: number): Observable<ICategoryModel> {
+    return of(this.findCategory(TEST_DATA, id, null));
+  }
+
+
+  private findCategory(data: ICategoryTreeModel[], id: number, parentId: number): ICategoryModel {
+    let result: ICategoryModel;
+    data.forEach(m => {
+      if (m.id === id) {
+        result = {
+          id: m.id,
+          name: m.description,
+          description: m.description,
+          parentId: parentId
+        }
+      }
+      if (!!m.children) {
+        result = this.findCategory(m.children, id, m.id);
+      }
+    });
+    return result;
   }
 }

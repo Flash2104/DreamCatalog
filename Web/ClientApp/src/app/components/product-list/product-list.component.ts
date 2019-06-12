@@ -6,8 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { Store } from '@ngrx/store';
-import { ProductListLoadAction } from 'src/app/store/product-list/product-list.actions';
+import { ProductListLoadAction, ProductListGetVolumeAction } from 'src/app/store/product-list/product-list.actions';
 import { filter } from 'rxjs/operators';
+import { CategoryLoadAction } from 'src/app/store/category/category.actions';
 
 @Component({
   selector: 'app-product-list',
@@ -16,10 +17,12 @@ import { filter } from 'rxjs/operators';
 })
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
-  categoryTitle: string;
+  page: number;
+  volume: number;
   displayedColumns: string[] = ['id', 'title', 'price', 'quantity'];
   dataSource: MatTableDataSource<IProductViewModel>;
-  store$ = this._store.select(s => s.productListModuleStore);
+  listStore$ = this._store.select(s => s.productListModuleStore);
+  categoryStore$ = this._store.select(s => s.categoryModuleStore);
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -34,23 +37,34 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
-        // const categoryId = +pm.get('categoryId');
-        // const page = +pm.get('page');
-        const data = pm.get('data');
-        // const request = new ProductListRequestModel(categoryId, page);
-        // this._store.dispatch(new ProductListLoadAction(request));
+        const categoryId = +pm.get('categoryId');
+        this.page = +pm.get('page');
+        this._store.dispatch(new CategoryLoadAction(categoryId));
+        this._store.dispatch(new ProductListGetVolumeAction());
       });
 
-
-
-    this.store$
+    this.categoryStore$
       .pipe(this.takeUntilDestroyed(),
-        filter(st => st.list !== null))
+        filter(st => !!st && st.data !== null))
+      .subscribe(st => {
+        const request = new ProductListRequestModel(st.data, this.page, this.volume);
+        this._store.dispatch(new ProductListLoadAction(request));
+      });
+
+    // this.volume$
+    //   .pipe(this.takeUntilDestroyed(),
+    //     filter(st => st !== null))
+    //   .subscribe(st => {
+    //     this.volume = st;
+    //   });
+
+    this.listStore$
+      .pipe(this.takeUntilDestroyed(),
+        filter(st => !!st && st.list !== null))
       .subscribe(p => {
         this.dataSource = new MatTableDataSource(p.list);
         this.dataSource.sort = this.sort;
-        this.categoryTitle = p.category.name;
+        this.volume = p.volume;
       });
-
   }
 }

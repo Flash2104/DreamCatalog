@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { ProductLoadAction } from 'src/app/store/product/product.actions';
 import { Observable } from 'rxjs';
-import { IProductUpdateRequestModel, IProductView } from 'src/app/store/product/product.model';
+import { IProductUpdateRequestModel, IProductStateModel } from 'src/app/store/product/product.model';
 import { filter } from 'rxjs/operators';
 
 @Component({

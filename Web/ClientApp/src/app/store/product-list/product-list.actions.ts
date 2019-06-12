@@ -2,17 +2,37 @@ import { Action } from '@ngrx/store';
 import { IProductListRequestModel, IProductViewModel } from './product-list.model';
 
 export enum ProductListActionTypes {
-  Init = "InitProductList",
+  SetVolume = "SetProductListVolume",
+  SetVolumeComplete = "SetProductListVolumeComplete",
+  GetVolume = "GetProductListVolume",
+  GetVolumeComplete = "GetProductListVolumeComplete",
+
   Load = "LoadProductList",
   LoadComplete = "LoadProductListComplete",
 }
 
+export class ProductListSetVolumeAction implements Action {
+  type = ProductListActionTypes.SetVolume;
+  payload: number;
 
-export class ProductListInitAction implements Action {
-  type = ProductListActionTypes.Init;
-  payload: IProductListRequestModel;
+  constructor(payload: number) {
+    this.payload = payload;
+  }
+}
 
-  constructor(payload: IProductListRequestModel) {
+export class ProductListSetVolumeCompleteAction implements Action {
+  type = ProductListActionTypes.SetVolumeComplete;
+}
+
+export class ProductListGetVolumeAction implements Action {
+  type = ProductListActionTypes.GetVolume;
+}
+
+export class ProductListGetVolumeCompleteAction implements Action {
+  type = ProductListActionTypes.GetVolumeComplete;
+  payload: number;
+
+  constructor(payload: number) {
     this.payload = payload;
   }
 }

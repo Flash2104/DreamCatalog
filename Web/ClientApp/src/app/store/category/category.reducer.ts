@@ -1,17 +1,17 @@
-import { initialState, ICategoryTreeView } from './category.model';
+import { initialState, ICategoryStateModel } from './category.model';
 import { Action } from '@ngrx/store';
-import { CategoryActionTypes, CategoryLoadAllCompleteAction } from './category.actions';
+import { CategoryActionTypes, CategoryLoadCompleteAction } from './category.actions';
 
-export function categoryReducer(state: ICategoryTreeView = initialState, action: Action) {
+export function categoryReducer(state: ICategoryStateModel = initialState, action: Action) {
   const model = { ...state };
 
   switch (action.type) {
-    case CategoryActionTypes.LoadAll: {
+    case CategoryActionTypes.Load: {
       model.isLoading = true;
       return model;
     }
-    case CategoryActionTypes.LoadAllComplete: {
-      const actionComplete = action as CategoryLoadAllCompleteAction;
+    case CategoryActionTypes.LoadComplete: {
+      const actionComplete = action as CategoryLoadCompleteAction;
       model.data = actionComplete.payload;
       model.isLoading = false;
       return model;

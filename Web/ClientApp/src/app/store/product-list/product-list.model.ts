@@ -1,12 +1,11 @@
 import { ICategoryModel } from '../category/category.model';
 
-export interface IProductListView {
+export interface IProductListStateModel {
   isLoading: boolean;
   isProcessing: boolean;
-  isWriting: boolean;
 
   list: IProductViewModel[];
-  category: ICategoryModel;
+  volume: number;
 }
 
 export interface IProductViewModel {
@@ -35,15 +34,11 @@ export class ProductListRequestModel implements IProductListRequestModel {
   }
 }
 
-export const initialState: IProductListView = {
-  isLoading: false,
-  isProcessing: false,
-  isWriting: false,
+export const VOLUME_KEY = 'VOLUME_LIST_VALUE';
+
+export const initialState: IProductListStateModel = {
+  isLoading: true,
+  isProcessing: true,
   list: [],
-  category: {
-    id: null,
-    children: [],
-    name: '',
-    description: ''
-  }
+  volume: 20
 };

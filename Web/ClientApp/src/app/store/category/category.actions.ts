@@ -1,18 +1,16 @@
 import { Action } from '@ngrx/store';
-import { ICategoryRequestModel, ICategoryModel } from './category.model';
+import { ICategoryModel } from './category.model';
 
 export enum CategoryActionTypes {
   Load = 'CategoryLoad',
-  LoadComplete = 'CategoryLoadComplete',
-  LoadAll = 'CategoryLoadAll',
-  LoadAllComplete = 'CategoryLoadAllComplete'
+  LoadComplete = 'CategoryLoadComplete'
 }
 
 export class CategoryLoadAction implements Action {
   type = CategoryActionTypes.Load;
-  payload: ICategoryRequestModel;
+  payload: number;
 
-  constructor(payload: ICategoryRequestModel) {
+  constructor(payload: number) {
     this.payload = payload;
   }
 }
@@ -23,18 +21,5 @@ export class CategoryLoadCompleteAction implements Action {
 
   constructor(payload: ICategoryModel) {
     this.payload = { ...payload };
-  }
-}
-
-export class CategoryLoadAllAction implements Action {
-  type = CategoryActionTypes.LoadAll;
-}
-
-export class CategoryLoadAllCompleteAction implements Action {
-  type = CategoryActionTypes.LoadAllComplete;
-  payload: ICategoryModel[];
-
-  constructor(payload: ICategoryModel[]) {
-    this.payload = payload;
   }
 }

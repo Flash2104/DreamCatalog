@@ -23,6 +23,7 @@ import { ProductInfoComponent } from './components/product-info/product-info.com
 import { environment } from 'src/environments/environment';
 import { ProductListEffects } from './store/product-list/product-list.effects';
 import { ProductEffects } from './store/product/product.effects';
+import { CategoryTreeEffects } from './store/category-tree/category-tree.effects';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ProductEffects } from './store/product/product.effects';
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([
       CategoryEffects,
+      CategoryTreeEffects,
       ProductEffects,
       ProductListEffects
     ]),

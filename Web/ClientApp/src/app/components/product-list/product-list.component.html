@@ -1,45 +1,50 @@
 <div class="row overflow-auto">
   <div class="col border-right">
-    <div class="mt-1">
-      <p>
-        {{categoryTitle}}
-        <button type="button" class="btn btn-outline-danger float-right btn-sm"> <i class="fa fa-close"></i></button>
-      </p>
-    </div>
-    <div class="mt-1">
-      <button type="button" class="btn btn-outline-success ml-1"> <i class="fa fa-save"></i> Сохранить</button>
-      <button type="button" class="btn btn-outline-secondary ml-1"><i class="fa fa-ban"></i> Отменить</button>
+    <div >
+      <div class="mt-1">
+        <p>
+          <!-- {{categoryStore.data.name}} -->
+          <button type="button" class="btn btn-outline-danger float-right btn-sm"> <i class="fa fa-close"></i></button>
+        </p>
+      </div>
+      <div class="mt-1">
+        <button type="button" class="btn btn-outline-success ml-1"> <i class="fas fa-plus-square"></i> Новый
+          товар</button>
+        <button type="button" class="btn btn-outline-secondary ml-1"><i class="fas fa-trash-alt"></i> Удалить</button>
+      </div>
     </div>
     <hr />
-    <table mat-table [dataSource]="dataSource" matSort class="mat-rlrvation-z8 ">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let element">{{element.id}}
-        </td>
-      </ng-container>
+    <div >
+      <table mat-table [dataSource]="dataSource" matSort class="mat-rlrvation-z8 ">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let element">{{element.id}}
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.title}}
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.title}}
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
-        <td mat-cell *matCellDef="let element"> {{element.price}}
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+          <td mat-cell *matCellDef="let element"> {{element.price}}
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
-        <td mat-cell *matCellDef="let element"> {{element.quantity}}
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.quantity}}
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="product/{{row.id}}"
-        routerLinkActive="router-link-active"></tr>
-    </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="product/{{row.id}}"
+          routerLinkActive="router-link-active"></tr>
+      </table>
+    </div>
   </div>
   <div class="col">
     <router-outlet></router-outlet>

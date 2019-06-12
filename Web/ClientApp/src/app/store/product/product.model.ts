@@ -1,4 +1,4 @@
-export interface IProductView {
+export interface IProductStateModel {
   isLoading: boolean;
   isProcessing: boolean;
 
@@ -31,9 +31,9 @@ export interface IProductUpdateRequestModel extends IProductCreateRequestModel {
   id: number;
 }
 
-export const initialState : IProductView = {
-  isLoading: false,
-  isProcessing: false,
+export const initialState : IProductStateModel = {
+  isLoading: true,
+  isProcessing: true,
   model: {
     id: null,
     imageId: null,

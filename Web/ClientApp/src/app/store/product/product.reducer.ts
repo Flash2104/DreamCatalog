@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IProductView, initialState } from './product.model';
+import { IProductStateModel, initialState } from './product.model';
 import {
   ProductActionTypes,
   ProductAddChangeAction,
@@ -8,7 +8,7 @@ import {
   ProductUpdateCompleteAction
 } from './product.actions';
 
-export function productReducer(state: IProductView = initialState, action: Action) {
+export function productReducer(state: IProductStateModel = initialState, action: Action) {
   const model = { ...state };
   switch (action.type) {
     case (ProductActionTypes.AddChange): {

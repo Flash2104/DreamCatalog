@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IProductViewModel, IProductListRequestModel } from './product-list.model';
+import { IProductViewModel, IProductListRequestModel, VOLUME_KEY } from './product-list.model';
 import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -7,7 +7,23 @@ export class ProductListService {
 
   constructor() { }
 
-  get(request: IProductListRequestModel): Observable<IProductViewModel[]> {
+  getList(request: IProductListRequestModel): Observable<IProductViewModel[]> {
+    return this.getMock(request);
+  }
+
+  setVolume(volume: number) : Observable<any> {
+    return of(localStorage.setItem(VOLUME_KEY, volume.toString()));
+  }
+  
+  getVolume() : Observable<number> {
+    const volume = localStorage.getItem(VOLUME_KEY);
+    if(!!volume) {
+      return of(+volume);
+    }
+    return of(20);
+  }
+
+  private getMock(request: IProductListRequestModel): Observable<IProductViewModel[]> {
     return of(PRODUCT_LIST);
   }
 }

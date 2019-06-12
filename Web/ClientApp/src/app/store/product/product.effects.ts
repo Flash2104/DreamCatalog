@@ -8,26 +8,15 @@ import { Action } from '@ngrx/store';
 import { ProductListLoadAction } from '../product-list/product-list.actions';
 import { ProductListRequestModel } from '../product-list/product-list.model';
 import { BaseDestroyComponent } from 'src/app/components/BaseDestroyComponent';
-import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 @Injectable()
 export class ProductEffects extends BaseDestroyComponent {
 
-  categoryId: number;
-  page: number;
-  volume: number;
-
   constructor(
     private _srv: ProductService,
-    private actions$: Actions,
-    private route: ActivatedRoute) {
+    private actions$: Actions) {
     super();
-    this.route.paramMap.pipe(this.takeUntilDestroyed()).subscribe(pm => {
-      this.categoryId = +pm.get('categoryId');
-      this.page = +pm.get('page');
-      this.volume = +pm.get('volume');
-    });
   }
 
   @Effect()
@@ -37,9 +26,9 @@ export class ProductEffects extends BaseDestroyComponent {
     map((res: IProductModel) => {
       let actions: Action[] = [];
       if (res) {
-        if (!!this.categoryId) {
-          actions.push(new ProductListLoadAction(new ProductListRequestModel(this.categoryId, this.page, this.volume)));
-        }
+        // if (!!this.categoryId) {
+        //   actions.push(new ProductListLoadAction(new ProductListRequestModel(this.categoryId, this.page, this.volume)));
+        // }
         actions.push(new ProductCreateCompleteAction(res));
       }
       return new ProductCreateCompleteAction(res);
