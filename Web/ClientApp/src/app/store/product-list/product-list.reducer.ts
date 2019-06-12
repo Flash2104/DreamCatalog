@@ -7,11 +7,11 @@ export function productListReducer(state: IProductListStateModel = initialState,
 
   switch (action.type) {
     case ProductListActionTypes.SetVolume: {
-      model.isProcessing = true;
+      model.isLoading = true;
       return model;
     }
     case ProductListActionTypes.SetVolumeComplete: {
-      model.isProcessing = false;
+      model.isLoading = false;
       return model;
     }
     case ProductListActionTypes.GetVolume: {

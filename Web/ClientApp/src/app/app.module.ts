@@ -24,6 +24,7 @@ import { environment } from 'src/environments/environment';
 import { ProductListEffects } from './store/product-list/product-list.effects';
 import { ProductEffects } from './store/product/product.effects';
 import { CategoryTreeEffects } from './store/category-tree/category-tree.effects';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { CategoryTreeEffects } from './store/category-tree/category-tree.effects
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     CdkTreeModule,

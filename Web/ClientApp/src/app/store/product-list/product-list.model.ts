@@ -2,7 +2,6 @@ import { ICategoryModel } from '../category/category.model';
 
 export interface IProductListStateModel {
   isLoading: boolean;
-  isProcessing: boolean;
 
   list: IProductViewModel[];
   volume: number;
@@ -37,8 +36,7 @@ export class ProductListRequestModel implements IProductListRequestModel {
 export const VOLUME_KEY = 'VOLUME_LIST_VALUE';
 
 export const initialState: IProductListStateModel = {
-  isLoading: true,
-  isProcessing: true,
-  list: [],
+  isLoading: false,
+  list: null,
   volume: 20
 };

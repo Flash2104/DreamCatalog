@@ -12,7 +12,7 @@ export function categoryTreeReducer(state: ICategoryTreeStateModel = initialStat
     }
     case CategoryTreeActionTypes.LoadComplete: {
       const actionComplete = action as CategoryTreeLoadCompleteAction;
-      model.data = actionComplete.payload;
+      model.tree = actionComplete.payload;
       model.isLoading = false;
       return model;
     }

@@ -1,8 +1,7 @@
 export interface IProductStateModel {
   isLoading: boolean;
-  isProcessing: boolean;
 
-  model: IProductModel;
+  product: IProductModel;
   changes: IProductChange[];
 }
 
@@ -32,14 +31,7 @@ export interface IProductUpdateRequestModel extends IProductCreateRequestModel {
 }
 
 export const initialState : IProductStateModel = {
-  isLoading: true,
-  isProcessing: true,
-  model: {
-    id: null,
-    imageId: null,
-    price: null,
-    quantity: null,
-    title: ''
-  },
-  changes: []
+  isLoading: false,
+  product: null,
+  changes: null
 }

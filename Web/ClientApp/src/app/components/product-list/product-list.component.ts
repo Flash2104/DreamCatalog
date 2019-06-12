@@ -8,7 +8,7 @@ import { IAppStore } from 'src/app/store/storeRootModule';
 import { Store } from '@ngrx/store';
 import { ProductListLoadAction, ProductListGetVolumeAction } from 'src/app/store/product-list/product-list.actions';
 import { filter } from 'rxjs/operators';
-import { CategoryLoadAction } from 'src/app/store/category/category.actions';
+import { CategoryLoadAction, CategoryInitAction } from 'src/app/store/category/category.actions';
 
 @Component({
   selector: 'app-product-list',
@@ -17,12 +17,17 @@ import { CategoryLoadAction } from 'src/app/store/category/category.actions';
 })
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
+  categoryName: string;
   page: number;
   volume: number;
   displayedColumns: string[] = ['id', 'title', 'price', 'quantity'];
   dataSource: MatTableDataSource<IProductViewModel>;
+  categoryStore$ = this._store.select(s => {
+    let st = s.categoryModuleStore;
+    return st;
+  });
   listStore$ = this._store.select(s => s.productListModuleStore);
-  categoryStore$ = this._store.select(s => s.categoryModuleStore);
+
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -33,6 +38,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   ngOnInit() {
+    // this._store.dispatch(new CategoryInitAction());
 
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
@@ -45,10 +51,13 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
 
     this.categoryStore$
       .pipe(this.takeUntilDestroyed(),
-        filter(st => !!st && st.data !== null))
+        filter(st => !!st))
       .subscribe(st => {
-        const request = new ProductListRequestModel(st.data, this.page, this.volume);
-        this._store.dispatch(new ProductListLoadAction(request));
+        if (st.category !== null) {
+          this.categoryName = st.category.name;
+          const request = new ProductListRequestModel(st.category, this.page, this.volume);
+          this._store.dispatch(new ProductListLoadAction(request));
+        }
       });
 
     // this.volume$
@@ -60,10 +69,12 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
 
     this.listStore$
       .pipe(this.takeUntilDestroyed(),
-        filter(st => !!st && st.list !== null))
+        filter(st => !!st))
       .subscribe(p => {
-        this.dataSource = new MatTableDataSource(p.list);
-        this.dataSource.sort = this.sort;
+        if (!!p.list) {
+          this.dataSource = new MatTableDataSource(p.list);
+          this.dataSource.sort = this.sort;
+        }
         this.volume = p.volume;
       });
   }

@@ -1,9 +1,10 @@
 <div class="row overflow-auto">
   <div class="col border-right">
     <div >
-      <div class="mt-1">
+      <!-- *ngIf="categoryStore$ | async; let categoryStore" -->
+      <div *ngIf="categoryStore$ | async as categoryStore; else loading" class="mt-1">
         <p>
-          <!-- {{categoryStore.data.name}} -->
+          {{categoryName}}
           <button type="button" class="btn btn-outline-danger float-right btn-sm"> <i class="fa fa-close"></i></button>
         </p>
       </div>
@@ -14,7 +15,7 @@
       </div>
     </div>
     <hr />
-    <div >
+    <div>
       <table mat-table [dataSource]="dataSource" matSort class="mat-rlrvation-z8 ">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
@@ -50,3 +51,7 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+<ng-template #loading>
+    Loading stuff...
+  </ng-template>

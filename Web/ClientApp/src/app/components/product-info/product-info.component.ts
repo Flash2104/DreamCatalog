@@ -61,10 +61,10 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
     this.store$
       .pipe(
         this.takeUntilDestroyed(),
-        filter(st => st.model !== null)
+        filter(st => st.product !== null)
       ).subscribe(st => {
-        this.productTitle = st.model.title;
-        const patchedValue = { ...st.model, imageId: this.imageFormControl.value };
+        this.productTitle = st.product.title;
+        const patchedValue = { ...st.product, imageId: this.imageFormControl.value };
         this.productForm.patchValue(patchedValue, { emitEvent: false });
       });
   }

@@ -2,8 +2,14 @@ import { Action } from '@ngrx/store';
 import { ICategoryModel } from './category.model';
 
 export enum CategoryActionTypes {
+  Init = 'CategoryInit',
+
   Load = 'CategoryLoad',
   LoadComplete = 'CategoryLoadComplete'
+}
+
+export class CategoryInitAction implements Action {
+  type = CategoryActionTypes.Init;
 }
 
 export class CategoryLoadAction implements Action {

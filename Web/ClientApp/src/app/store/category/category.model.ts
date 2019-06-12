@@ -1,7 +1,6 @@
 export interface ICategoryStateModel {
   isLoading: boolean;
-  isProcessing: boolean;
-  data: ICategoryModel;
+  category: ICategoryModel;
 }
 
 export interface ICategoryModel {
@@ -13,11 +12,5 @@ export interface ICategoryModel {
 
 export const initialState: ICategoryStateModel = {
   isLoading: false,
-  isProcessing: false,
-  data: {
-    id: null,
-    name: '',
-    description: '',
-    parentId: null
-  }
+  category: null
 };

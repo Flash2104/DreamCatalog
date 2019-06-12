@@ -28,12 +28,13 @@ export class CatalogComponent extends BaseDestroyComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this._store.dispatch(new CategoryTreeLoadAction());
     this.store$
     .pipe(this.takeUntilDestroyed(),
-    filter(st => !!st && st.data != null))
+    filter(st => !!st && st.tree != null))
     .subscribe(catalogTree => {
-      this.dataSource.data = catalogTree.data;
+      this.dataSource.data = catalogTree.tree;
     });
   }
 

@@ -17,23 +17,23 @@ export function productReducer(state: IProductStateModel = initialState, action:
       return model;
     }
     case (ProductActionTypes.Create): {
-      model.isProcessing = true;
+      model.isLoading = true;
       return model;
     }
     case (ProductActionTypes.CreateComplete): {
       const createCompleteAction = action as ProductCreateCompleteAction;
-      model.model = createCompleteAction.payload;
-      model.isProcessing = false;
+      model.product = createCompleteAction.payload;
+      model.isLoading = false;
       return model;
     }
     case (ProductActionTypes.Update): {
-      model.isProcessing = true;
+      model.isLoading = true;
       return model;
     }
     case (ProductActionTypes.UpdateComplete): {
       const createCompleteAction = action as ProductUpdateCompleteAction;
-      model.model = createCompleteAction.payload;
-      model.isProcessing = false;
+      model.product = createCompleteAction.payload;
+      model.isLoading = false;
       return model;
     }
     case (ProductActionTypes.Load): {
@@ -42,7 +42,7 @@ export function productReducer(state: IProductStateModel = initialState, action:
     }
     case (ProductActionTypes.LoadComplete): {
       const loadCompleteAction = action as ProductLoadCompleteAction;
-      model.model = loadCompleteAction.payload;
+      model.product = loadCompleteAction.payload;
       model.isLoading = false;
       return model;
     }

@@ -20,19 +20,23 @@ export class CategoryService {
 
   private findCategory(data: ICategoryTreeModel[], id: number, parentId: number): ICategoryModel {
     let result: ICategoryModel;
-    data.forEach(m => {
-      if (m.id === id) {
+    for(let i=0; i<data.length; i++){
+      if (data[i].id === id) {
         result = {
-          id: m.id,
-          name: m.description,
-          description: m.description,
+          id: data[i].id,
+          name: data[i].name,
+          description: data[i].description,
           parentId: parentId
         }
+        break;
       }
-      if (!!m.children) {
-        result = this.findCategory(m.children, id, m.id);
+      if (!!data[i].children && data[i].children.length > 0) {
+        result = this.findCategory(data[i].children, id, data[i].id);
+        if(!!result){
+          break;
+        }
       }
-    });
+    }
     return result;
   }
 }
