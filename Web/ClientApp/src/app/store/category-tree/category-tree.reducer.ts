@@ -16,5 +16,7 @@ export function categoryTreeReducer(state: ICategoryTreeStateModel = initialStat
       model.isLoading = false;
       return model;
     }
+    default:
+      return model;
   }
 }

@@ -16,18 +16,18 @@ export interface IProductViewModel {
 }
 
 export interface IProductListRequestModel {
-  category: ICategoryModel;
+  categoryId: number;
   take: number;
   skip: number;
 }
 
 export class ProductListRequestModel implements IProductListRequestModel {
-  category: ICategoryModel;
+  categoryId: number;
   take: number;
   skip: number;
 
-  constructor(category: ICategoryModel, page: number, volume: number) {
-    this.category = category;
+  constructor(categoryId: number, page: number, volume: number) {
+    this.categoryId = categoryId;
     this.skip = (page - 1) * volume;
     this.take = volume;
   }

@@ -19,5 +19,7 @@ export function categoryReducer(state: ICategoryStateModel = initialState, actio
       model.isLoading = false;
       return model;
     }
+    default:
+      return model;
   }
 }

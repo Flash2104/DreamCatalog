@@ -10,6 +10,10 @@ export interface ICategoryModel {
   parentId: number;
 }
 
+export interface ICategoryRequestModel {
+  id: number;
+}
+
 export const initialState: ICategoryStateModel = {
   isLoading: false,
   category: null

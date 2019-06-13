@@ -11,7 +11,7 @@ import { CatalogComponent } from './components/catalog/catalog.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTreeModule } from '@angular/material/tree';
-import { MatTableModule, MatSortModule, MatIconModule, MatExpansionModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { MatTableModule, MatSortModule, MatIconModule, MatExpansionModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule } from '@angular/material';
 import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreRootModule } from './store/storeRootModule';
@@ -25,6 +25,8 @@ import { ProductListEffects } from './store/product-list/product-list.effects';
 import { ProductEffects } from './store/product/product.effects';
 import { CategoryTreeEffects } from './store/category-tree/category-tree.effects';
 import { CommonModule } from '@angular/common';
+import { LoadingComponent } from './components/loading/loading.component';
+import { CategoryComponent } from './components/category/category.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { CommonModule } from '@angular/common';
     CatalogComponent,
     EditorComponent,
     ProductListComponent,
-    ProductInfoComponent
+    ProductInfoComponent,
+    LoadingComponent,
+    CategoryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -50,6 +54,8 @@ import { CommonModule } from '@angular/common';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
+    MatSelectModule,
     BrowserAnimationsModule,
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([
@@ -65,9 +71,9 @@ import { CommonModule } from '@angular/common';
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
-      { path: 'category', component: CatalogComponent, children:[
-        {path: ':categoryId/:page/products', component: ProductListComponent, children: [
-          { path: 'product/:productId', component: ProductInfoComponent }
+      { path: 'catalog', component: CatalogComponent, children:[
+        {path: 'category/:categoryId', component: CategoryComponent, children: [
+            { path: 'product/:productId', component: ProductInfoComponent }
         ]}
       ] },
       { path: 'editor', component: EditorComponent }

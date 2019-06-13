@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ICategoryModel } from './category.model';
+import { ICategoryModel, ICategoryRequestModel } from './category.model';
 
 export enum CategoryActionTypes {
   Init = 'CategoryInit',
@@ -14,10 +14,12 @@ export class CategoryInitAction implements Action {
 
 export class CategoryLoadAction implements Action {
   type = CategoryActionTypes.Load;
-  payload: number;
+  payload: ICategoryRequestModel;
 
-  constructor(payload: number) {
-    this.payload = payload;
+  constructor(categoryId: number) {
+    this.payload = {
+      id: categoryId
+    };
   }
 }
 

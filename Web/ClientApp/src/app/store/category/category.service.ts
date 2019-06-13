@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { ICategoryModel } from './category.model';
 import { TEST_DATA, ICategoryTreeModel } from '../category-tree/category-tree.model';
 
@@ -10,11 +10,13 @@ export class CategoryService {
   }
 
   get(id: number): Observable<ICategoryModel> {
-    return this.getMock(id);
+    let result:Subject< ICategoryModel> = new Subject<ICategoryModel>();// of({} as ICategoryModel);
+    setTimeout(() =>{ result.next(this.getMock(id))}, 3000);
+    return result;
   }
 
-  private getMock(id: number): Observable<ICategoryModel> {
-    return of(this.findCategory(TEST_DATA, id, null));
+  private getMock(id: number): ICategoryModel {
+    return this.findCategory(TEST_DATA, id, null);
   }
 
 

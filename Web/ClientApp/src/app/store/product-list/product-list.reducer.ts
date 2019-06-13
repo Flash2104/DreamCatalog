@@ -34,5 +34,7 @@ export function productListReducer(state: IProductListStateModel = initialState,
       model.isLoading = false;
       return model;
     }
+    default:
+      return model;
   }
 }

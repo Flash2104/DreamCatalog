@@ -2,11 +2,8 @@ table {
   width: 100%;
 }
 
-th.mat-sort-header-sorted {
-  color: black;
-}
 
-.mat-row{        
+.mat-row{
   position: relative;
 }
 
@@ -14,9 +11,9 @@ th.mat-sort-header-sorted {
   position: relative;
   width: 100%;
   height: 100%;
-  left: 0;     
+  left: 0;
   cursor: pointer;
-  cursor: hand;      
+  cursor: hand;
 }
 
 tr:hover {
@@ -24,10 +21,12 @@ tr:hover {
 }
 
 tr {
-  /* position: absolute; */
   width: 100%;
   height: 100%;
-  /* left: 0;      */
   cursor: pointer;
-  cursor: hand;  
+  cursor: hand;
+}
+
+.mat-checkbox {
+  border: none;
 }

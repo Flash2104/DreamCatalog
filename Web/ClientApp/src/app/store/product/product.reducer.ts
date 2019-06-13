@@ -46,5 +46,7 @@ export function productReducer(state: IProductStateModel = initialState, action:
       model.isLoading = false;
       return model;
     }
+    default:
+      return model;
   }
 }
