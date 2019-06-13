@@ -11,7 +11,7 @@ import { CatalogComponent } from './components/catalog/catalog.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTreeModule } from '@angular/material/tree';
-import { MatTableModule, MatSortModule, MatIconModule, MatExpansionModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule } from '@angular/material';
+import { MatTableModule, MatSortModule, MatIconModule, MatExpansionModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatPaginatorModule, MatAutocompleteModule } from '@angular/material';
 import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreRootModule } from './store/storeRootModule';
@@ -27,6 +27,7 @@ import { CategoryTreeEffects } from './store/category-tree/category-tree.effects
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './components/loading/loading.component';
 import { CategoryComponent } from './components/category/category.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CategoryComponent } from './components/category/category.component';
     ProductListComponent,
     ProductInfoComponent,
     LoadingComponent,
-    CategoryComponent
+    CategoryComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -56,6 +58,8 @@ import { CategoryComponent } from './components/category/category.component';
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatPaginatorModule,
+    MatAutocompleteModule,
     BrowserAnimationsModule,
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([

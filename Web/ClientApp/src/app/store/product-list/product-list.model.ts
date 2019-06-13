@@ -38,5 +38,5 @@ export const VOLUME_KEY = 'VOLUME_LIST_VALUE';
 export const initialState: IProductListStateModel = {
   isLoading: false,
   list: null,
-  volume: 20
+  volume: 10
 };

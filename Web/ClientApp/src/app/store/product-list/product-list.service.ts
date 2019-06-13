@@ -11,20 +11,21 @@ export class ProductListService {
     return this.getMock(request);
   }
 
-  setVolume(volume: number) : Observable<any> {
+  setVolume(volume: number): Observable<any> {
     return of(localStorage.setItem(VOLUME_KEY, volume.toString()));
   }
-  
-  getVolume() : Observable<number> {
+
+  getVolume(): Observable<number> {
     const volume = localStorage.getItem(VOLUME_KEY);
-    if(!!volume) {
+    if (!!volume) {
       return of(+volume);
     }
-    return of(20);
+    return of(10);
   }
 
   private getMock(request: IProductListRequestModel): Observable<IProductViewModel[]> {
-    return of(PRODUCT_LIST);
+    const result = PRODUCT_LIST.slice(request.skip, request.skip + request.take);
+    return of(result);
   }
 }
 

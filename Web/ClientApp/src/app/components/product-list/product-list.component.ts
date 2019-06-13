@@ -8,8 +8,8 @@ import { IAppStore } from 'src/app/store/storeRootModule';
 import { Store } from '@ngrx/store';
 import { ProductListGetVolumeAction, ProductListLoadAction } from 'src/app/store/product-list/product-list.actions';
 import { filter } from 'rxjs/operators';
-import { CategoryLoadAction } from 'src/app/store/category/category.actions';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'app-product-list',
@@ -18,7 +18,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
-  page: number;
+  page: number = 1;
   volume: number;
   categoryId: number;
   displayedColumns: string[] = ['select', 'id', 'title', 'price', 'quantity'];
@@ -28,6 +28,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   volume$ = this._store.select(s => s.productListModuleStore.volume);
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(
     private _store: Store<IAppStore>,
@@ -37,12 +38,11 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
 
   ngOnInit() {
     this._store.dispatch(new ProductListGetVolumeAction());
-
+    
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
         this.categoryId = +pm.get('categoryId');
-        this.page = +pm.get('page');
         this.loadList();
       });
 
@@ -60,6 +60,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
       .subscribe(p => {
         this.dataSource = new MatTableDataSource(p.list);
         this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
       });
   }
 
