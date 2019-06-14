@@ -16,6 +16,9 @@ export function productReducer(state: IProductStateModel = initialState, action:
       model.changes.push(addChange.payload);
       return model;
     }
+    case (ProductActionTypes.Init): {
+      return initialState;
+    }
     case (ProductActionTypes.Create): {
       model.isLoading = true;
       return model;

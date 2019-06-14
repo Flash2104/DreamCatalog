@@ -32,6 +32,12 @@ export interface IProductUpdateRequestModel extends IProductCreateRequestModel {
 
 export const initialState : IProductStateModel = {
   isLoading: false,
-  product: null,
-  changes: null
+  product: {
+    id: null,
+    imageId: null,
+    price: null,
+    quantity: null,
+    title: ''
+  },
+  changes: []
 }

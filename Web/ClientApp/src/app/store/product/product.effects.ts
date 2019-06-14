@@ -5,8 +5,6 @@ import { ProductActionTypes, ProductCreateAction, ProductCreateCompleteAction, P
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { IProductModel } from './product.model';
 import { Action } from '@ngrx/store';
-import { ProductListLoadAction } from '../product-list/product-list.actions';
-import { ProductListRequestModel } from '../product-list/product-list.model';
 import { BaseDestroyComponent } from 'src/app/components/BaseDestroyComponent';
 import { of } from 'rxjs';
 

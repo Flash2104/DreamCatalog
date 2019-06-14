@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IProductListRequestModel, IProductViewModel } from './product-list.model';
+import { IProductListRequestModel, IProductListResponseModel } from './product-list.model';
 
 export enum ProductListActionTypes {
   SetVolume = "SetProductListVolume",
@@ -9,6 +9,8 @@ export enum ProductListActionTypes {
 
   Load = "LoadProductList",
   LoadComplete = "LoadProductListComplete",
+  Delete = "DeleteProducts",
+  DeleteComplete = "DeleteProductsComplete"
 }
 
 export class ProductListSetVolumeAction implements Action {
@@ -48,10 +50,24 @@ export class ProductListLoadAction implements Action {
 
 export class ProductListLoadCompleteAction implements Action {
   type = ProductListActionTypes.LoadComplete;
-  payload: IProductViewModel[];
+  payload: IProductListResponseModel;
 
-  constructor(payload: IProductViewModel[]) {
+  constructor(payload: IProductListResponseModel) {
     this.payload = payload;
   }
 }
+
+export class ProductsDeleteAction implements Action {
+  type = ProductListActionTypes.Delete;
+  payload: number[];
+
+  constructor(payload: number[]) {
+    this.payload = payload;
+  }
+}
+
+export class ProductsDeleteCompleteAction implements Action {
+  type = ProductListActionTypes.DeleteComplete;
+}
+
 

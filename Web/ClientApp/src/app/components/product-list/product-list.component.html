@@ -2,9 +2,10 @@
   <div>
     <div>
       <div class="mt-1">
-        <button type="button" class="btn btn-outline-success ml-1"> <i class="fa fas fa-plus-square"></i> Новый
-          товар</button>
-        <button type="button" class="btn btn-outline-danger ml-1" (click)="delete()"><i class="fa fas fa-trash-alt"></i> Удалить</button>
+        <button type="button" class="btn btn-outline-success ml-1" routerLink="product/null"> <i
+            class="fa fas fa-plus-square"></i> Новый товар</button>
+        <button type="button" class="btn btn-outline-danger ml-1" (click)="delete()"><i class="fa fas fa-trash"></i>
+          Удалить</button>
       </div>
     </div>
   </div>
@@ -52,8 +53,9 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="product/{{row.id}}"
       routerLinkActive="router-link-active"></tr>
   </table>
-  
+
   <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
 
-  <app-paginator [spanButtons]="3" [totalElements]="100" ></app-paginator>
+  <app-paginator [spanButtons]="2" [totalElements]="totalElements" [volume]="volume" (page$)="onPageChange($event)">
+  </app-paginator>
 </div>

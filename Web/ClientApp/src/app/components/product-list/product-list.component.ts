@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BaseDestroyComponent } from '../BaseDestroyComponent';
-import { IProductViewModel, ProductListRequestModel } from 'src/app/store/product-list/product-list.model';
+import { IProductViewModel, ProductListRequestModel, ISortRequestModel } from 'src/app/store/product-list/product-list.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { IAppStore } from 'src/app/store/storeRootModule';
@@ -10,6 +10,7 @@ import { ProductListGetVolumeAction, ProductListLoadAction } from 'src/app/store
 import { filter } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material';
+import { PaginatorComponent } from '../paginator/paginator.component';
 
 @Component({
   selector: 'app-product-list',
@@ -19,16 +20,19 @@ import { MatPaginator } from '@angular/material';
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
   page: number = 1;
-  volume: number;
+  volume: number = 3;
   categoryId: number;
+  totalElements: number;
+  sortColumn: string;
+  sortDirection: string;
   displayedColumns: string[] = ['select', 'id', 'title', 'price', 'quantity'];
   dataSource: MatTableDataSource<IProductViewModel>;
   selection = new SelectionModel<IProductViewModel>(true, []);
   store$ = this._store.select(s => s.productListModuleStore);
-  volume$ = this._store.select(s => s.productListModuleStore.volume);
+  // volume$ = this._store.select(s => s.productListModuleStore.volume);
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(PaginatorComponent, { static: true }) paginator: PaginatorComponent;
 
   constructor(
     private _store: Store<IAppStore>,
@@ -38,7 +42,13 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
 
   ngOnInit() {
     this._store.dispatch(new ProductListGetVolumeAction());
-    
+
+    this.sort.sortChange
+      .pipe(this.takeUntilDestroyed())
+      .subscribe(pm => {
+        this.loadList();
+      });
+
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
@@ -46,50 +56,44 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
         this.loadList();
       });
 
-    this.volume$
-      .pipe(this.takeUntilDestroyed(),
-        filter(st => !!st))
-      .subscribe(v => {
-        this.volume = v;
-        this.loadList();
-      });
-
     this.store$
       .pipe(this.takeUntilDestroyed(),
-        filter(st => !!st && !!st.list))
+        filter(st => !!st && !!st.listData))
       .subscribe(p => {
-        this.dataSource = new MatTableDataSource(p.list);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.totalElements = p.totalElements;
+        this.dataSource = new MatTableDataSource(p.listData);
       });
+  }
+
+  onPageChange($event: any): void {
+    this.page = $event;
+    this.loadList();
   }
 
   private loadList() {
-    let request = new ProductListRequestModel(this.categoryId, this.page, this.volume);
+    const sorting = <ISortRequestModel>{ column: this.sort.active, direction: this.sort.direction };
+    let request = new ProductListRequestModel(this.categoryId, sorting, this.page, this.volume);
     this._store.dispatch(new ProductListLoadAction(request));
   }
 
-  delete() : void {
+  delete(): void {
     let message = 'Удалены объекты: \n';
     this.selection.selected.forEach(s => message += s.id.toString() + ' - ' + s.title + ';\n')
     window.alert(message);
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  /** The label for the checkbox on the passed row */
   checkboxLabel(row?: IProductViewModel): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;

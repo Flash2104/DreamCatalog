@@ -1,14 +1,28 @@
 import { Injectable } from "@angular/core";
-import { IProductViewModel, IProductListRequestModel, VOLUME_KEY } from './product-list.model';
+import { IProductViewModel, IProductListRequestModel, VOLUME_KEY, IProductListResponseModel } from './product-list.model';
 import { Observable, of } from 'rxjs';
+import { IResponse, HTTP_HEADERS } from '../models';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListService {
+  private productListUrl = 'api/product-list';
 
-  constructor() { }
+  constructor(
+    private _http: HttpClient
+  ) { }
 
-  getList(request: IProductListRequestModel): Observable<IProductViewModel[]> {
+  getList(request: IProductListRequestModel): Observable<IProductListResponseModel> {
     return this.getMock(request);
+  }
+
+  delete(request: number[]): Observable<IResponse<any>> {
+    const res$ = this._http.request<IResponse<any>>('DELETE', `${this.productListUrl}/delete`, {
+      headers: HTTP_HEADERS,
+      body: request
+    })
+    return res$;
   }
 
   setVolume(volume: number): Observable<any> {
@@ -23,8 +37,37 @@ export class ProductListService {
     return of(10);
   }
 
-  private getMock(request: IProductListRequestModel): Observable<IProductViewModel[]> {
-    const result = PRODUCT_LIST.slice(request.skip, request.skip + request.take);
+  private getMock(request: IProductListRequestModel): Observable<IProductListResponseModel> {
+    const col = request.sort.column;
+    const dir = request.sort.direction;
+    const sortFunc = (a: IProductViewModel, b: IProductViewModel): number => {
+      if (dir === 'asc') {
+        if (a[col] > b[col]) {
+          return 1;
+        } else if (a[col] === b[col]) {
+          return 0;
+        } else {
+          return -1;
+        }
+      } else {
+        if (a[col] > b[col]) {
+          return -1;
+        } else if (a[col] === b[col]) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }
+    }
+    let list: IProductViewModel[] = PRODUCT_LIST;
+    if (dir !== '') {
+      list = PRODUCT_LIST.sort((a, b) => sortFunc(a, b));
+    }
+    const paged = list.slice(request.skip, request.skip + request.take)
+    const result = {
+      list: paged,
+      totalElements: PRODUCT_LIST.length
+    } as IProductListResponseModel;
     return of(result);
   }
 }

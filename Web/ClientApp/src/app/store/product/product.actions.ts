@@ -4,6 +4,7 @@ import { IProductCreateRequestModel, IProductModel, IProductChange, IProductUpda
 export enum ProductActionTypes {
   AddChange = "AddChangeProductField",
 
+  Init = "InitProduct",
   Create = "CreateProduct",
   CreateComplete = "CreateProductComplete",
   Update = "UpdateProduct",
@@ -20,6 +21,10 @@ export class ProductAddChangeAction implements Action {
   constructor(payload: IProductChange) {
     this.payload = payload;
   }
+}
+
+export class ProductInitAction implements Action {
+  type = ProductActionTypes.Init;
 }
 
 export class ProductCreateAction implements Action {

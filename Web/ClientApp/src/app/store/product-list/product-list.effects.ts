@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductListService } from './product-list.service';
-import { ProductListActionTypes, ProductListLoadAction, ProductListLoadCompleteAction, ProductListSetVolumeAction, ProductListGetVolumeAction, ProductListGetVolumeCompleteAction, ProductListSetVolumeCompleteAction } from './product-list.actions';
+import { ProductListActionTypes, ProductListLoadAction, ProductListLoadCompleteAction, ProductListSetVolumeAction, ProductListGetVolumeAction, ProductListGetVolumeCompleteAction, ProductListSetVolumeCompleteAction, ProductsDeleteAction, ProductsDeleteCompleteAction } from './product-list.actions';
 import { map, catchError, switchMap } from 'rxjs/operators';
-import { IProductViewModel } from './product-list.model';
+import { IProductListResponseModel } from './product-list.model';
 import { of } from 'rxjs';
+import { IResponse } from '../models';
 
 @Injectable()
 export class ProductListEffects {
@@ -18,8 +19,20 @@ export class ProductListEffects {
   loadProductList$ = this.actions$.pipe(
     ofType(ProductListActionTypes.Load),
     switchMap((action: ProductListLoadAction) => this._srv.getList(action.payload)),
-    map((response: IProductViewModel[]) => {
+    map((response: IProductListResponseModel) => {
       return new ProductListLoadCompleteAction(response);
+    }),
+    catchError(error => of(console.log('Ошибка loadProductList effect!: ', error)))
+  )
+
+  @Effect()
+  deleteProducts$ = this.actions$.pipe(
+    ofType(ProductListActionTypes.Delete),
+    switchMap((action: ProductsDeleteAction) => this._srv.delete(action.payload)),
+    map((response: IResponse<any>) => {
+      if(response.success) {
+        return new ProductsDeleteCompleteAction();
+      }
     }),
     catchError(error => of(console.log('Ошибка loadProductList effect!: ', error)))
   )

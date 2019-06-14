@@ -30,7 +30,16 @@ export function productListReducer(state: IProductListStateModel = initialState,
     }
     case ProductListActionTypes.LoadComplete: {
       const actionComplete = action as ProductListLoadCompleteAction;
-      model.list = actionComplete.payload;
+      model.listData = actionComplete.payload.list;
+      model.totalElements = actionComplete.payload.totalElements;
+      model.isLoading = false;
+      return model;
+    }
+    case ProductListActionTypes.Delete: {
+      model.isLoading = true;
+      return model;
+    }
+    case ProductListActionTypes.DeleteComplete: {
       model.isLoading = false;
       return model;
     }
