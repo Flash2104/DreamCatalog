@@ -5,7 +5,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Store } from '@ngrx/store';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { ProductLoadAction, ProductInitAction, ProductAddChangeAction } from 'src/app/store/product/product.actions';
-import { IProductUpdateRequestModel, IProductChange } from 'src/app/store/product/product.model';
+import { IProductUpdateRequestModel } from 'src/app/store/product/product.model';
 import { filter } from 'rxjs/operators';
 import { Location } from '@angular/common';
 
@@ -19,7 +19,6 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
   productTitle: string;
   productId: string;
   categoryId: number;
-  changes: IProductChange[];
 
   titleFormControl: FormControl;
   priceFormControl: FormControl;
@@ -32,6 +31,7 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
   store$ = this._store.select(s => s.productModuleStore);
 
   constructor(
+    private loc: Location,
     private router: Router,
     private route: ActivatedRoute,
     private _store: Store<IAppStore>
@@ -78,8 +78,7 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
         propertyName: 'title',
         oldValue: this.productTitle,
         newValue: title
-      }))
-      this.productTitle = title;
+      }));
     })
 
     this.store$

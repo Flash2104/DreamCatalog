@@ -13,6 +13,7 @@ export function productReducer(state: IProductStateModel = initialState, action:
   switch (action.type) {
     case (ProductActionTypes.AddChange): {
       const addChange = action as ProductAddChangeAction;
+      model.product[addChange.payload.propertyName] = addChange.payload.newValue;
       model.changes.push(addChange.payload);
       return model;
     }
