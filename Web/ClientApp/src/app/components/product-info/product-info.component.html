@@ -1,4 +1,4 @@
-<div *ngIf="store$ | async as store; else loading">
+<div class="mr-3" *ngIf="store$ | async as store; else loading">
   <div *ngIf="!store.isLoading; else loading">
     <div class="row-header">
       <div class="row m-0">
@@ -10,33 +10,37 @@
             Новый товар
           </div>
         </div>
-
         <div class="col-1 p-0">
           <button type="button" class="btn btn-outline-secondary float-right border-0" (click)="onClose()"> <i
               class="fa fa-close"></i></button>
         </div>
       </div>
-      <button mat-button type="button" class="btn btn-outline-secondary p-0 mr-2 px-2" (click)="onSave()"> <i
-          class="fa fa-save"></i>
+      <button mat-button type="button" class="btn btn-outline-secondary p-0 mr-2 px-2" (click)="onSave()"
+        [disabled]="!isChanged || !productForm.valid"> <i class="fa fa-save"></i>
         Сохранить</button>
       <button mat-button type="button" class="btn btn-outline-secondary p-0 px-2" (click)="onCancelChanges()"><i
           class="fa fa-ban"></i> Отменить</button>
     </div>
     <hr />
-    <form [formGroup]="productForm">
-      <div class="form-group">
-        <label for="title-input">Название</label>
-        <input id="title-input" type="text" class="form-control" formControlName="title">
-        <!-- <small *ngIf="!!errors" *ngFor="let error of errors" class="form-text text-muted" >{{error.message}}</small> -->
-      </div>
-      <div class="form-group">
-        <label for="price-input">Цена</label>
-        <input id="price-input" type="number" class="form-control" formControlName="price">
-      </div>
-      <div class="form-group">
-        <label for="quantity-input">Количество</label>
-        <input id="quantity-input" type="number" class="form-control" formControlName="quantity">
-      </div>
+    <form class="form-group" [formGroup]="productForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Название</mat-label>
+        <input matInput type="text" formControlName="title">
+        <small *ngIf="titleFormControl.errors && titleFormControl.errors.required" class="form-text text-muted">{{requiredMessage}}</small>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Цена</mat-label>
+        <input matInput type="text" formControlName="price">
+        <small *ngIf="priceFormControl.errors && priceFormControl.errors.required" class="form-text text-muted">{{requiredMessage}}</small>
+        <small *ngIf="priceFormControl.errors && priceFormControl.errors.numberKey" class="form-text text-muted">Упс, не число!</small>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Количество</mat-label>
+        <input matInput type="text" placeholder="Количество" formControlName="quantity">
+        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.required" class="form-text text-muted">{{requiredMessage}}</small>
+        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.numberKey" class="form-text text-muted">Упс, не число!</small>
+        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.integer" class="form-text text-muted">Количество должно быть целочисленным!</small>
+      </mat-form-field>
     </form>
   </div>
 </div>

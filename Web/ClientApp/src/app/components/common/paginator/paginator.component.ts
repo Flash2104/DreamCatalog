@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { BaseDestroyComponent } from '../../BaseDestroyComponent';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
+import { IAppStore } from 'src/app/store/storeRootModule';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-paginator',
@@ -22,7 +24,9 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
   leftPage: number = 1;
   rightPage: number;
 
-  constructor() {
+  constructor(
+    private _store: Store<IAppStore>
+  ) {
     super();
   }
 
@@ -31,10 +35,8 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
     if (!!this.spanButtons) {
       this.rightPage = this.spanButtons;
     }
-    if (!!this.totalElements) {
-      const isRemainder = this.totalElements % this.volume != 0;
-      this.totalPages = isRemainder ? (this.totalElements / this.volume) + 1 : (this.totalElements / this.volume);
-    }
+
+    this.initTotalPages();
     this.initTriggers();
 
     this.page$
@@ -43,6 +45,22 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
         this.page = v;
         this.count = v * this.volume;
       });
+
+      this._store.select(st=> st.productListModuleStore)
+      .pipe(this.takeUntilDestroyed(),
+      filter(st => !!st && !st.listData && !st.isLoading))
+      .subscribe(ps => {
+        this.totalElements = ps.totalElements;
+        this.initTotalPages();
+        this.initTriggers();
+      });
+  }
+
+  private initTotalPages() {
+    if (!!this.totalElements) {
+      const isRemainder = this.totalElements % this.volume != 0;
+      this.totalPages = isRemainder ? this.totalElements / this.volume | 0 + 1 : (this.totalElements / this.volume) | 0;
+    }
   }
 
   private initTriggers() {

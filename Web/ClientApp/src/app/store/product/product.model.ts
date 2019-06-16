@@ -6,6 +6,11 @@ export interface IProductStateModel {
   changed: IProductModel;
 }
 
+export interface IProductValidateError {
+  field: string;
+  message: string;
+}
+
 export interface IProductModel {
   id: number;
   title: string;
@@ -27,7 +32,7 @@ export interface IProductCreateRequestModel {
 }
 
 export interface IProductUpdateRequestModel extends IProductCreateRequestModel {
-  id: number;
+  id?: number;
 }
 
 export const initialState: IProductStateModel = {

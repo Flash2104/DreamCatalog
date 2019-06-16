@@ -43,7 +43,7 @@ import { CategoryComponent } from './components/category/category.component';
 import { PaginatorComponent } from './components/common/paginator/paginator.component';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
-import { SaveDialogComponent } from './components/common/save-dialog/save-dialog.component';
+import { CloseDialogComponent } from './components/common/close-dialog/close-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +57,7 @@ import { SaveDialogComponent } from './components/common/save-dialog/save-dialog
     LoadingComponent,
     CategoryComponent,
     PaginatorComponent,
-    SaveDialogComponent
+    CloseDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -110,6 +110,6 @@ import { SaveDialogComponent } from './components/common/save-dialog/save-dialog
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [SaveDialogComponent] 
+  entryComponents: [CloseDialogComponent] 
 })
 export class AppModule { }

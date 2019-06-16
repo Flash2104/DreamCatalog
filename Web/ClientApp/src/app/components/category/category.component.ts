@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryLoadAction } from 'src/app/store/category/category.actions';
 import { ProductListComponent } from '../product-list/product-list.component';
-import { SaveDialogComponent } from '../common/save-dialog/save-dialog.component';
+import { CloseDialogComponent } from '../common/close-dialog/close-dialog.component';
 import { MatDialog } from '@angular/material';
 
 @Component({
@@ -67,7 +67,7 @@ export class CategoryComponent extends BaseDestroyComponent implements OnInit {
   }
 
   private openDialog() {
-    const dialogRef = this.dialog.open(SaveDialogComponent);
+    const dialogRef = this.dialog.open(CloseDialogComponent);
 
     dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
       if (result) {

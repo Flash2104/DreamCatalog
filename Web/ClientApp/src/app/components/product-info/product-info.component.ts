@@ -4,10 +4,11 @@ import { BaseDestroyComponent } from '../BaseDestroyComponent';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { IAppStore } from 'src/app/store/storeRootModule';
-import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction } from 'src/app/store/product/product.actions';
+import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction, ProductCreateAction, ProductUpdateAction } from 'src/app/store/product/product.actions';
 import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
-import { SaveDialogComponent } from '../common/save-dialog/save-dialog.component';
+import { CloseDialogComponent } from '../common/close-dialog/close-dialog.component';
+import { IProductValidateError, IProductCreateRequestModel, IProductUpdateRequestModel } from 'src/app/store/product/product.model';
 
 @Component({
   selector: 'app-product-info',
@@ -16,9 +17,12 @@ import { SaveDialogComponent } from '../common/save-dialog/save-dialog.component
 })
 export class ProductInfoComponent extends BaseDestroyComponent implements OnInit {
 
-  productId: string;
+  requiredMessage: string = "Поле не должно быть пустым";
+
+  productId?: number;
   categoryId: number;
   isChanged: boolean;
+  errors: IProductValidateError[] = [];
 
   titleFormControl: FormControl;
   priceFormControl: FormControl;
@@ -49,8 +53,8 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
-        this.productId = pm.get('productId');
-        if (this.productId !== 'null') {
+        this.productId = +pm.get('productId') || null;
+        if (this.productId) {
           this._store.dispatch(new ProductLoadAction(+this.productId));
         } else {
           this._store.dispatch(new ProductInitAction());
@@ -58,8 +62,8 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
       });
 
     this.titleFormControl = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-    this.priceFormControl = new FormControl(Validators.required, this.validateNumber);
-    this.quantityFormControl = new FormControl(Validators.required, this.validateNumber);
+    this.priceFormControl = new FormControl(null, [Validators.required, this.validateNumber]);
+    this.quantityFormControl = new FormControl(null, [Validators.required, this.validateNumber, this.validateInteger]);
     this.imageFormControl = new FormControl();
 
     this.productForm = new FormGroup({
@@ -84,11 +88,30 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
       });
   }
 
-  private validateNumber(control: AbstractControl): { [key: string]: boolean } {
+  private validateNumber(control: FormControl): { [key: string]: boolean } {
     if (!!control.value && (isNaN(control.value))) {
       return { 'numberKey': true };
     }
     return null;
+  }
+
+  private validateInteger(control: FormControl): { [key: string]: boolean } {
+    if (!!control.value && (!Number.isInteger(+control.value))) {
+      return { 'integer': true };
+    }
+    return null;
+  }
+
+  onSave() {
+    if (this.productForm.valid) {
+      const request: IProductUpdateRequestModel = { ...this.productForm.value };
+      if (this.productId) {
+        request.id = +this.productId;
+        this._store.dispatch(new ProductUpdateAction(request))
+      } else {
+        this._store.dispatch(new ProductCreateAction(request))
+      }
+    }
   }
 
   onCancelChanges() {
@@ -108,7 +131,7 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open(SaveDialogComponent);
+    const dialogRef = this.dialog.open(CloseDialogComponent);
 
     dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
       if (result) {
