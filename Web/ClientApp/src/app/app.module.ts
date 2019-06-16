@@ -11,7 +11,20 @@ import { CatalogComponent } from './components/catalog/catalog.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTreeModule } from '@angular/material/tree';
-import { MatTableModule, MatSortModule, MatIconModule, MatExpansionModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatPaginatorModule, MatAutocompleteModule } from '@angular/material';
+import {
+  MatTableModule,
+  MatSortModule,
+  MatIconModule,
+  MatExpansionModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatCheckboxModule,
+  MatSelectModule,
+  MatPaginatorModule,
+  MatAutocompleteModule,
+  MatButtonModule,
+  MatDialogModule
+} from '@angular/material';
 import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreRootModule } from './store/storeRootModule';
@@ -27,7 +40,10 @@ import { CategoryTreeEffects } from './store/category-tree/category-tree.effects
 import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './components/loading/loading.component';
 import { CategoryComponent } from './components/category/category.component';
-import { PaginatorComponent } from './components/paginator/paginator.component';
+import { PaginatorComponent } from './components/common/paginator/paginator.component';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CdkTableModule } from '@angular/cdk/table';
+import { SaveDialogComponent } from './components/common/save-dialog/save-dialog.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +56,8 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
     ProductInfoComponent,
     LoadingComponent,
     CategoryComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    SaveDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -54,6 +71,7 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
     MatExpansionModule,
     MatTableModule,
     MatSortModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
@@ -61,6 +79,9 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
     MatPaginatorModule,
     MatAutocompleteModule,
     BrowserAnimationsModule,
+    CdkStepperModule,
+    CdkTableModule,
+    MatDialogModule,
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([
       CategoryEffects,
@@ -75,15 +96,20 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
     RouterModule.forRoot([
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
-      { path: 'catalog', component: CatalogComponent, children:[
-        {path: 'category/:categoryId', component: CategoryComponent, children: [
-            { path: 'product/:productId', component: ProductInfoComponent }
-        ]}
-      ] },
+      {
+        path: 'catalog', component: CatalogComponent, children: [
+          {
+            path: 'category/:categoryId', component: CategoryComponent, children: [
+              { path: 'product/:productId', component: ProductInfoComponent }
+            ]
+          }
+        ]
+      },
       { path: 'editor', component: EditorComponent }
     ])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [SaveDialogComponent] 
 })
 export class AppModule { }

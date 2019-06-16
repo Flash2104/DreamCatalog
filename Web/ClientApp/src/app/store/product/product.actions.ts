@@ -1,8 +1,9 @@
 import { Action } from '@ngrx/store';
-import { IProductCreateRequestModel, IProductModel, IProductChange, IProductUpdateRequestModel } from './product.model';
+import { IProductCreateRequestModel, IProductModel, IProductFieldChange, IProductUpdateRequestModel } from './product.model';
 
 export enum ProductActionTypes {
   AddChange = "AddChangeProductField",
+  CancelChanges = "CancelChangesProduct",
 
   Init = "InitProduct",
   Create = "CreateProduct",
@@ -16,11 +17,15 @@ export enum ProductActionTypes {
 export class ProductAddChangeAction implements Action {
 
   type = ProductActionTypes.AddChange;
-  payload: IProductChange;
+  payload: IProductModel;
 
-  constructor(payload: IProductChange) {
+  constructor(payload: IProductModel) {
     this.payload = payload;
   }
+}
+
+export class ProductCancelChangesAction implements Action {
+  type = ProductActionTypes.CancelChanges;
 }
 
 export class ProductInitAction implements Action {

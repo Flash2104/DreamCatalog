@@ -2,7 +2,6 @@ table {
   width: 100%;
 }
 
-
 .mat-row{
   position: relative;
 }
@@ -25,8 +24,4 @@ tr {
   height: 100%;
   cursor: pointer;
   cursor: hand;
-}
-
-.mat-checkbox {
-  border: none;
 }

@@ -1,25 +1,18 @@
 <div>
-  <div>
-    <div>
-      <div class="mt-1">
-        <button type="button" class="btn btn-outline-success ml-1" routerLink="product/null"> <i
-            class="fa fas fa-plus-square"></i> Новый товар</button>
-        <button type="button" class="btn btn-outline-danger ml-1" (click)="delete()"><i class="fa fas fa-trash"></i>
-          Удалить</button>
-      </div>
-    </div>
+  <div class="pl-2">
+  <app-paginator [spanButtons]="3" [totalElements]="totalElements" [volume]="volume" (page$)="onPageChange($event)">
+    </app-paginator>
   </div>
-  <hr />
-  <table mat-table [dataSource]="dataSource" matSort class="mat-rlrvation-z8 ">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-rlrvation-z8 border">
 
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+        <mat-checkbox color="warn" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
           [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
         </mat-checkbox>
       </th>
       <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+        <mat-checkbox color="warn" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
           [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
         </mat-checkbox>
       </td>
@@ -56,6 +49,4 @@
 
   <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
 
-  <app-paginator [spanButtons]="2" [totalElements]="totalElements" [volume]="volume" (page$)="onPageChange($event)">
-  </app-paginator>
 </div>

@@ -4,10 +4,10 @@ import { BaseDestroyComponent } from '../BaseDestroyComponent';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { IAppStore } from 'src/app/store/storeRootModule';
-import { ProductLoadAction, ProductInitAction, ProductAddChangeAction } from 'src/app/store/product/product.actions';
-import { IProductUpdateRequestModel } from 'src/app/store/product/product.model';
+import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction } from 'src/app/store/product/product.actions';
 import { filter } from 'rxjs/operators';
-import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material';
+import { SaveDialogComponent } from '../common/save-dialog/save-dialog.component';
 
 @Component({
   selector: 'app-product-info',
@@ -16,9 +16,9 @@ import { Location } from '@angular/common';
 })
 export class ProductInfoComponent extends BaseDestroyComponent implements OnInit {
 
-  productTitle: string;
   productId: string;
   categoryId: number;
+  isChanged: boolean;
 
   titleFormControl: FormControl;
   priceFormControl: FormControl;
@@ -31,10 +31,10 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
   store$ = this._store.select(s => s.productModuleStore);
 
   constructor(
-    private loc: Location,
     private router: Router,
     private route: ActivatedRoute,
-    private _store: Store<IAppStore>
+    private _store: Store<IAppStore>,
+    public dialog: MatDialog
   ) {
     super();
   }
@@ -45,6 +45,7 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
       .subscribe(pm => {
         this.categoryId = +pm.get('categoryId');
       });
+
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
@@ -69,26 +70,16 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
     });
 
     this.productForm.valueChanges.pipe(this.takeUntilDestroyed()).subscribe((product) => {
-      console.log('value changed: ' + product);
-    })
-
-    this.titleFormControl.valueChanges.pipe(this.takeUntilDestroyed()).subscribe((title) => {
-      console.log('title changed: ' + title);
-      this._store.dispatch(new ProductAddChangeAction({
-        propertyName: 'title',
-        oldValue: this.productTitle,
-        newValue: title
-      }));
+      this._store.dispatch(new ProductAddChangeAction(product));
     })
 
     this.store$
       .pipe(
         this.takeUntilDestroyed(),
-        // filter(st => st.product !== null)
+        filter(st => st.changed !== null)
       ).subscribe(st => {
-        if (st.product)
-          this.productTitle = st.product.title;
-        const patchedValue = { ...st.product, imageId: this.imageFormControl.value };
+        this.isChanged = st.isChanged;
+        const patchedValue = { ...st.changed, imageId: this.imageFormControl.value };
         this.productForm.patchValue(patchedValue, { emitEvent: false });
       });
   }
@@ -100,7 +91,29 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
     return null;
   }
 
+  onCancelChanges() {
+    this._store.dispatch(new ProductCancelChangesAction());
+  }
+
   onClose() {
+    if (this.isChanged) {
+      this.openDialog();
+    } else {
+      this.navigateToParent();
+    }
+  }
+
+  private navigateToParent() {
     this.router.navigate(['catalog', 'category', this.categoryId]);
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(SaveDialogComponent);
+
+    dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
+      if (result) {
+        this.navigateToParent();
+      }
+    });
   }
 }

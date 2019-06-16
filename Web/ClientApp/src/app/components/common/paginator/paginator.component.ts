@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { BaseDestroyComponent } from '../BaseDestroyComponent';
+import { BaseDestroyComponent } from '../../BaseDestroyComponent';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({

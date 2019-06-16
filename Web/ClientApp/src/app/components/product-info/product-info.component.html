@@ -1,28 +1,45 @@
-<div class="mt-1">
-  <p>
-    Товар {{productTitle}}
-    <button type="button" class="btn btn-outline-danger float-right btn-sm" (click)="onClose()"> <i class="fa fa-close"></i></button>
-  </p>
-</div>
-<div class="mt-1">
-  <button type="button" class="btn btn-outline-success ml-1"> <i class="fa fa-save"></i> Сохранить</button>
-  <button type="button" class="btn btn-outline-secondary ml-1"><i class="fa fa-ban"></i> Отменить</button>
-</div>
-<hr />
-<div>
-  <form [formGroup]="productForm">
-    <div class="form-group">
-      <label for="title-input">Название</label>
-      <input id="title-input" type="text" class="form-control" formControlName="title">
-      <!-- <small *ngIf="!!errors" *ngFor="let error of errors" class="form-text text-muted" >{{error.message}}</small> -->
+<div *ngIf="store$ | async as store; else loading">
+  <div *ngIf="!store.isLoading; else loading">
+    <div class="row-header">
+      <div class="row m-0">
+        <div class="col mt-2 p-0 pl-2">
+          <div *ngIf="store.product.id">
+            Товар {{store.product.title}}
+          </div>
+          <div *ngIf="!store.product.id">
+            Новый товар
+          </div>
+        </div>
+
+        <div class="col-1 p-0">
+          <button type="button" class="btn btn-outline-secondary float-right border-0" (click)="onClose()"> <i
+              class="fa fa-close"></i></button>
+        </div>
+      </div>
+      <button mat-button type="button" class="btn btn-outline-secondary p-0 mr-2 px-2" (click)="onSave()"> <i
+          class="fa fa-save"></i>
+        Сохранить</button>
+      <button mat-button type="button" class="btn btn-outline-secondary p-0 px-2" (click)="onCancelChanges()"><i
+          class="fa fa-ban"></i> Отменить</button>
     </div>
-    <div>
-      <label for="price-input">Цена</label>
-      <input id="price-input" type="number" class="form-control" formControlName="price">
-    </div>
-    <div>
-      <label for="quantity-input">Количество</label>
-      <input id="quantity-input" type="number" class="form-control" formControlName="quantity">
-    </div>
-  </form>
+    <hr />
+    <form [formGroup]="productForm">
+      <div class="form-group">
+        <label for="title-input">Название</label>
+        <input id="title-input" type="text" class="form-control" formControlName="title">
+        <!-- <small *ngIf="!!errors" *ngFor="let error of errors" class="form-text text-muted" >{{error.message}}</small> -->
+      </div>
+      <div class="form-group">
+        <label for="price-input">Цена</label>
+        <input id="price-input" type="number" class="form-control" formControlName="price">
+      </div>
+      <div class="form-group">
+        <label for="quantity-input">Количество</label>
+        <input id="quantity-input" type="number" class="form-control" formControlName="quantity">
+      </div>
+    </form>
+  </div>
 </div>
+<ng-template #loading>
+  <app-loading> </app-loading>
+</ng-template>

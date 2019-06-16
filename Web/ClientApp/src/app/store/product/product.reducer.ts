@@ -13,8 +13,13 @@ export function productReducer(state: IProductStateModel = initialState, action:
   switch (action.type) {
     case (ProductActionTypes.AddChange): {
       const addChange = action as ProductAddChangeAction;
-      model.product[addChange.payload.propertyName] = addChange.payload.newValue;
-      model.changes.push(addChange.payload);
+      model.isChanged = true;
+      model.changed = { ...addChange.payload };
+      return model;
+    }
+    case (ProductActionTypes.CancelChanges): {
+      model.changed = {...model.product};
+      model.isChanged = false;
       return model;
     }
     case (ProductActionTypes.Init): {
@@ -26,7 +31,8 @@ export function productReducer(state: IProductStateModel = initialState, action:
     }
     case (ProductActionTypes.CreateComplete): {
       const createCompleteAction = action as ProductCreateCompleteAction;
-      model.product = createCompleteAction.payload;
+      model.product = { ...createCompleteAction.payload };
+      model.changed = { ...createCompleteAction.payload };
       model.isLoading = false;
       return model;
     }
@@ -35,8 +41,9 @@ export function productReducer(state: IProductStateModel = initialState, action:
       return model;
     }
     case (ProductActionTypes.UpdateComplete): {
-      const createCompleteAction = action as ProductUpdateCompleteAction;
-      model.product = createCompleteAction.payload;
+      const updateCompleteAction = action as ProductUpdateCompleteAction;
+      model.product = { ...updateCompleteAction.payload };
+      model.changed = { ...updateCompleteAction.payload };
       model.isLoading = false;
       return model;
     }
@@ -46,7 +53,8 @@ export function productReducer(state: IProductStateModel = initialState, action:
     }
     case (ProductActionTypes.LoadComplete): {
       const loadCompleteAction = action as ProductLoadCompleteAction;
-      model.product = loadCompleteAction.payload;
+      model.product = { ...loadCompleteAction.payload };
+      model.changed = { ...loadCompleteAction.payload };
       model.isLoading = false;
       return model;
     }

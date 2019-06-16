@@ -9,8 +9,7 @@ import { Store } from '@ngrx/store';
 import { ProductListGetVolumeAction, ProductListLoadAction } from 'src/app/store/product-list/product-list.actions';
 import { filter } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginator } from '@angular/material';
-import { PaginatorComponent } from '../paginator/paginator.component';
+import { PaginatorComponent } from '../common/paginator/paginator.component';
 
 @Component({
   selector: 'app-product-list',
@@ -20,7 +19,7 @@ import { PaginatorComponent } from '../paginator/paginator.component';
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
   page: number = 1;
-  volume: number = 3;
+  volume: number = 5;
   categoryId: number;
   totalElements: number;
   sortColumn: string;
@@ -29,7 +28,6 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   dataSource: MatTableDataSource<IProductViewModel>;
   selection = new SelectionModel<IProductViewModel>(true, []);
   store$ = this._store.select(s => s.productListModuleStore);
-  // volume$ = this._store.select(s => s.productListModuleStore.volume);
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(PaginatorComponent, { static: true }) paginator: PaginatorComponent;

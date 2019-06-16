@@ -1,8 +1,9 @@
 export interface IProductStateModel {
   isLoading: boolean;
+  isChanged: boolean;
 
   product: IProductModel;
-  changes: IProductChange[];
+  changed: IProductModel;
 }
 
 export interface IProductModel {
@@ -13,9 +14,8 @@ export interface IProductModel {
   quantity: number;
 }
 
-export interface IProductChange {
+export interface IProductFieldChange {
   propertyName: string;
-  oldValue: any;
   newValue: any;
 }
 
@@ -30,8 +30,9 @@ export interface IProductUpdateRequestModel extends IProductCreateRequestModel {
   id: number;
 }
 
-export const initialState : IProductStateModel = {
+export const initialState: IProductStateModel = {
   isLoading: false,
+  isChanged: false,
   product: {
     id: null,
     imageId: null,
@@ -39,5 +40,11 @@ export const initialState : IProductStateModel = {
     quantity: null,
     title: ''
   },
-  changes: []
+  changed: {
+    id: null,
+    imageId: null,
+    price: null,
+    quantity: null,
+    title: ''
+  }
 }
