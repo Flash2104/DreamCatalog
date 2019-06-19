@@ -2,7 +2,7 @@
 
 namespace Web.Interfaces.Repository
 {
-    internal interface ICategoryRepository: IRepository<DbCategory>
+    public interface ICategoryRepository: IRepository<DbCategory>
     {
     }
 }

@@ -12,5 +12,10 @@ namespace Web.Models
         public string Description { get; set; }
 
         public List<CategoryTreeModel> Children { get; set; }
+
+        public CategoryTreeModel()
+        {
+            Children = new List<CategoryTreeModel>();
+        }
     }
 }

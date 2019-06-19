@@ -22,18 +22,18 @@ namespace Web.Repositories
             return await _appDbContext.Set<T>().FindAsync(id);
         }
 
-        public async Task<List<T>> ListAll()
+        public virtual async Task<List<T>> ListAll()
         {
             return await _appDbContext.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetSingleBySpec(ISpecification<T> spec)
+        public virtual async Task<T> GetSingleBySpec(ISpecification<T> spec)
         {
             var result = await List(spec);
             return result.FirstOrDefault();
         }
 
-        public async Task<List<T>> List(ISpecification<T> spec)
+        public virtual async Task<List<T>> List(ISpecification<T> spec)
         {
             // fetch a Queryable that includes all expression-based includes
             var queryableResultWithIncludes = spec.Includes
@@ -52,20 +52,20 @@ namespace Web.Repositories
         }
 
 
-        public async Task<T> Add(T entity)
+        public virtual async Task<T> Add(T entity)
         {
             _appDbContext.Set<T>().Add(entity);
             await _appDbContext.SaveChangesAsync();
             return entity;
         }
 
-        public async Task Update(T entity)
+        public virtual async Task Update(T entity)
         {
             _appDbContext.Entry(entity).State = EntityState.Modified;
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task Delete(T entity)
+        public virtual async Task Delete(T entity)
         {
             _appDbContext.Set<T>().Remove(entity);
             await _appDbContext.SaveChangesAsync();

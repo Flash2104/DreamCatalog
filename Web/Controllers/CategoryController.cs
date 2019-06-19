@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Web.Interfaces.Services;
 using Web.Models;
@@ -18,13 +19,13 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public ResponseModel<List<CategoryTreeModel>> ListAllCategories()
+        public Task<ResponseModel<List<CategoryTreeModel>>> ListAllCategories()
         {
             return _categoryService.ListAllCategories();
         }
 
         [HttpGet("get/{id}")]
-        public ResponseModel<CategoryModel> GetCategory(int id)
+        public Task<ResponseModel<CategoryModel>> GetCategory(int id)
         {
             return _categoryService.GetCategory(id);
         }

@@ -8,8 +8,7 @@ namespace Web.Data.Entities
         public string Title { get; set; }
 
         public DbImage()
-        {
-
+        {        
         }
     }
 }
