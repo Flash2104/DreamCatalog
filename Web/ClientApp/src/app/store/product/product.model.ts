@@ -42,7 +42,7 @@ export interface IProductCreateRequestModel {
 }
 
 export interface IProductUpdateRequestModel extends IProductCreateRequestModel {
-  id?: number;
+  id: number;
 }
 
 export const initialState: IProductStateModel = {

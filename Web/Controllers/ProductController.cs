@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Web.Interfaces.Services;
+using Web.Models;
+using Web.Models.Request;
 
 namespace Web.Controllers
 {
@@ -7,36 +10,41 @@ namespace Web.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        // GET: api/ProductApi
+        private readonly IProductService _productService;
+
+        public ProductController(IProductService productService)
+        {
+            _productService = productService;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ResponseModel<List<ProductModel>> ListAll(int categoryId)
         {
-            return new string[] { "value1", "value2" };
+            return _productService.ListAll(categoryId);
         }
 
-        // GET: api/ProductApi/5
-        [HttpGet("[action]/{id}")]
-        public string Get(int id)
+        [HttpPost("[action]")]
+        public ResponseModel<List<ProductModel>> QueryList([FromBody]ProductListQueryModel query)
         {
-            return "value";
+            return _productService.QueryList(query);
         }
 
-        // POST: api/ProductApi
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("[action]")]
+        public ResponseModel<ProductModel> CreateProduct([FromBody] ProductCreateRequestModel model)
         {
+            return _productService.CreateProduct(model);
         }
 
-        // PUT: api/ProductApi/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("[action]")]
+        public ResponseModel<ProductModel> UpdateProduct([FromBody] ProductUpdateRequestModel model)
         {
+            return _productService.UpdateProduct(model);
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete()]
+        public ResponseModel<int> DeleteProducts([FromBody] int[] ids)
         {
+            return _productService.DeleteProducts(ids);
         }
     }
 }

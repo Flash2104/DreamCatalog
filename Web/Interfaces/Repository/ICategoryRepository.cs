@@ -1,6 +1,8 @@
-﻿namespace Web.Interfaces.Repository
+﻿using Web.Data.Entities;
+
+namespace Web.Interfaces.Repository
 {
-    internal interface ICategoryRepository
+    internal interface ICategoryRepository: IRepository<DbCategory>
     {
     }
 }

@@ -10,7 +10,7 @@ export class CategoryService {
   }
 
   get(id: number): Observable<ICategoryModel> {
-    let result:Subject< ICategoryModel> = new Subject<ICategoryModel>();// of({} as ICategoryModel);
+    let result = new Subject<ICategoryModel>();
     setTimeout(() =>{ result.next(this.getMock(id))}, 3000);
     return result;
   }

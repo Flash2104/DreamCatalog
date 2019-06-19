@@ -10,11 +10,19 @@ export class ProductService {
   }
 
   get(id: number): Observable<IProductModel> {
+    return this.getMock(id);
+  }
+
+  private getMock(id: number) {
     let data = PRODUCT_LIST.find(p => p.id == id);
     return of(data);
   }
 
   create(request: IProductCreateRequestModel): Observable<IProductModel> {
+    return this.createMock(request);
+  }
+
+  private createMock(request: IProductCreateRequestModel) {
     var result = { ...request } as IProductModel;
     const index = PRODUCT_LIST.length - 1;
     result.id = PRODUCT_LIST.sort(p => p.id)[index].id + 1;
@@ -23,6 +31,10 @@ export class ProductService {
   }
 
   update(request: IProductUpdateRequestModel): Observable<IProductModel> {
+    return this.updateMock(request);
+  }
+
+  private updateMock(request: IProductUpdateRequestModel) {
     let data = PRODUCT_LIST.find(p => p.id == request.id);
     data.imageId = request.imageId;
     data.price = request.price;
