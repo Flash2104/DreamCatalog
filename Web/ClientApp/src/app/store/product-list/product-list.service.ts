@@ -38,32 +38,36 @@ export class ProductListService {
   }
 
   private getMock(request: IProductListRequestModel): Observable<IProductListResponseModel> {
-    const col = request.sort.column;
-    const dir = request.sort.direction;
-    const sortFunc = (a: IProductViewModel, b: IProductViewModel): number => {
-      if (dir === 'asc') {
-        if (a[col] > b[col]) {
-          return 1;
-        } else if (a[col] === b[col]) {
-          return 0;
+    let list: IProductViewModel[] =  PRODUCT_LIST.slice();
+
+    if (!!request.sort) {
+      const col = request.sort.column;
+      const dir = request.sort.direction;
+      const sortFunc = (a: IProductViewModel, b: IProductViewModel): number => {
+        if (dir === 'asc') {
+          if (a[col] > b[col]) {
+            return 1;
+          } else if (a[col] === b[col]) {
+            return 0;
+          } else {
+            return -1;
+          }
         } else {
-          return -1;
-        }
-      } else {
-        if (a[col] > b[col]) {
-          return -1;
-        } else if (a[col] === b[col]) {
-          return 0;
-        } else {
-          return 1;
+          if (a[col] > b[col]) {
+            return -1;
+          } else if (a[col] === b[col]) {
+            return 0;
+          } else {
+            return 1;
+          }
         }
       }
+      if (dir !== '') {
+        list = PRODUCT_LIST.sort((a, b) => sortFunc(a, b));
+      }
     }
-    let list: IProductViewModel[] = PRODUCT_LIST;
-    if (dir !== '') {
-      list = PRODUCT_LIST.sort((a, b) => sortFunc(a, b));
-    }
-    const paged = list.slice(request.skip, request.skip + request.take)
+    const skip = (request.page - 1) * request.take;
+    const paged = list.slice(skip, skip + request.take)
     const result = {
       list: paged,
       totalElements: PRODUCT_LIST.length
@@ -78,209 +82,239 @@ export const PRODUCT_LIST: IProductViewModel[] = [
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 2,
     title: 'adc',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 3,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 4,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 5,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 6,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 7,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 8,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 9,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 10,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 11,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 12,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 13,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 14,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 15,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 16,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 17,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 18,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 19,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 20,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 21,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 22,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 23,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 24,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 25,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 26,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 27,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 28,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 29,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   },
   {
     id: 30,
     title: 'Shoes loern',
     price: 60.00,
     quantity: 10,
-    imageId: 1
+    imageId: 1,
+    categoryId: 1
   }
 ]

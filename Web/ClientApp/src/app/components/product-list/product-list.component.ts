@@ -22,6 +22,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   volume: number = 5;
   categoryId: number;
   totalElements: number;
+  totalPages: number;
   sortColumn: string;
   sortDirection: string;
   displayedColumns: string[] = ['select', 'id', 'title', 'price', 'quantity'];
@@ -59,8 +60,14 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
         filter(st => !!st && !!st.listData))
       .subscribe(p => {
         this.totalElements = p.totalElements;
+        this.initTotalPages();
         this.dataSource = new MatTableDataSource(p.listData);
       });
+  }
+
+  private initTotalPages() {
+      const isRemainder = this.totalElements % this.volume != 0;
+      this.totalPages = isRemainder ? this.totalElements / this.volume | 0 + 1 : (this.totalElements / this.volume) | 0;
   }
 
   onPageChange($event: any): void {

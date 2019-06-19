@@ -1,6 +1,6 @@
 <div>
   <div class="pl-2">
-  <app-paginator [spanButtons]="3" [totalElements]="totalElements" [volume]="volume" (page$)="onPageChange($event)">
+  <app-paginator [spanButtons]="3" [totalElements]="totalElements" [totalPages]="totalPages" [volume]="volume" (page$)="onPageChange($event)">
     </app-paginator>
   </div>
   <table mat-table [dataSource]="dataSource" matSort class="mat-rlrvation-z8 border">

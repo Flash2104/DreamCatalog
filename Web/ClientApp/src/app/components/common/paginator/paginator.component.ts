@@ -13,6 +13,7 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
 
   @Input() spanButtons: number = 1;
   @Input() totalElements: number = 1;
+  @Input() totalPages: number = 1;
   @Input() volume: number = 10;
   @Output() page$: EventEmitter<number> = new EventEmitter(true);
 
@@ -20,7 +21,6 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
   page: number = 1;
   count: number;
   triggers: any[] = [];
-  totalPages: number = 0;
   leftPage: number = 1;
   rightPage: number;
 
@@ -36,7 +36,6 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
       this.rightPage = this.spanButtons;
     }
 
-    this.initTotalPages();
     this.initTriggers();
 
     this.page$
@@ -45,23 +44,8 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
         this.page = v;
         this.count = v * this.volume;
       });
-
-      this._store.select(st=> st.productListModuleStore)
-      .pipe(this.takeUntilDestroyed(),
-      filter(st => !!st && !st.listData && !st.isLoading))
-      .subscribe(ps => {
-        this.totalElements = ps.totalElements;
-        this.initTotalPages();
-        this.initTriggers();
-      });
   }
 
-  private initTotalPages() {
-    if (!!this.totalElements) {
-      const isRemainder = this.totalElements % this.volume != 0;
-      this.totalPages = isRemainder ? this.totalElements / this.volume | 0 + 1 : (this.totalElements / this.volume) | 0;
-    }
-  }
 
   private initTriggers() {
     if (this.totalPages <= this.spanButtons) {

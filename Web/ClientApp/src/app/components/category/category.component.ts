@@ -7,6 +7,7 @@ import { CategoryLoadAction } from 'src/app/store/category/category.actions';
 import { ProductListComponent } from '../product-list/product-list.component';
 import { CloseDialogComponent } from '../common/close-dialog/close-dialog.component';
 import { MatDialog } from '@angular/material';
+import { RouteService } from 'src/app/services/route.service';
 
 @Component({
   selector: 'app-category',
@@ -25,7 +26,7 @@ export class CategoryComponent extends BaseDestroyComponent implements OnInit {
   @ViewChild(ProductListComponent, { static: true }) productList: ProductListComponent
 
   constructor(
-    private router: Router,
+    private _routeSrv: RouteService,
     private activatedRoute: ActivatedRoute,
     private _store: Store<IAppStore>,
     public dialog: MatDialog
@@ -58,12 +59,8 @@ export class CategoryComponent extends BaseDestroyComponent implements OnInit {
     if (this.isProductChanged) {
       this.openDialog();
     } else {
-      this.navigateToParent();
+      this._routeSrv.navigateToCatalog();
     }
-  }
-
-  private navigateToParent() {
-    this.router.navigate(['catalog']);
   }
 
   private openDialog() {
@@ -71,7 +68,7 @@ export class CategoryComponent extends BaseDestroyComponent implements OnInit {
 
     dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
       if (result) {
-        this.navigateToParent();
+        this._routeSrv.navigateToCatalog();
       }
     });
   }

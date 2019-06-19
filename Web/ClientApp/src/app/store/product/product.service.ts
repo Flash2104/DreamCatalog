@@ -28,6 +28,7 @@ export class ProductService {
     data.price = request.price;
     data.quantity = request.quantity;
     data.title = request.title;
+    data.categoryId = request.categoryId;
     return of(data);
   }
 }

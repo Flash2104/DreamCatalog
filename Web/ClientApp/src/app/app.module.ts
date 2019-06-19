@@ -23,7 +23,8 @@ import {
   MatPaginatorModule,
   MatAutocompleteModule,
   MatButtonModule,
-  MatDialogModule
+  MatDialogModule,
+  MatSnackBarModule
 } from '@angular/material';
 import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -32,7 +33,7 @@ import { CategoryEffects } from './store/category/category.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ProductListComponent } from './components/product-list/product-list.component';
-import { ProductInfoComponent } from './components/product-info/product-info.component';
+import { ProductViewComponent } from './components/product-view/product-view.component';
 import { environment } from 'src/environments/environment';
 import { ProductListEffects } from './store/product-list/product-list.effects';
 import { ProductEffects } from './store/product/product.effects';
@@ -44,6 +45,8 @@ import { PaginatorComponent } from './components/common/paginator/paginator.comp
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CloseDialogComponent } from './components/common/close-dialog/close-dialog.component';
+import { NotificationComponent } from './components/common/notifications/notification.component';
+import { ErrorComponent } from './components/common/errors/error.component';
 
 @NgModule({
   declarations: [
@@ -53,11 +56,13 @@ import { CloseDialogComponent } from './components/common/close-dialog/close-dia
     CatalogComponent,
     EditorComponent,
     ProductListComponent,
-    ProductInfoComponent,
+    ProductViewComponent,
     LoadingComponent,
     CategoryComponent,
     PaginatorComponent,
-    CloseDialogComponent
+    CloseDialogComponent,
+    NotificationComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -82,6 +87,7 @@ import { CloseDialogComponent } from './components/common/close-dialog/close-dia
     CdkStepperModule,
     CdkTableModule,
     MatDialogModule,
+    MatSnackBarModule,
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([
       CategoryEffects,
@@ -100,7 +106,8 @@ import { CloseDialogComponent } from './components/common/close-dialog/close-dia
         path: 'catalog', component: CatalogComponent, children: [
           {
             path: 'category/:categoryId', component: CategoryComponent, children: [
-              { path: 'product/:productId', component: ProductInfoComponent }
+              { path: 'product/:productId', component: ProductViewComponent },
+              { path: 'product/create', component: ProductViewComponent }
             ]
           }
         ]
@@ -110,6 +117,6 @@ import { CloseDialogComponent } from './components/common/close-dialog/close-dia
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [CloseDialogComponent] 
+  entryComponents: [CloseDialogComponent, NotificationComponent, ErrorComponent]
 })
 export class AppModule { }

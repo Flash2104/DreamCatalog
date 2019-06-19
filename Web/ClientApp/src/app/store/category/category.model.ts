@@ -16,5 +16,10 @@ export interface ICategoryRequestModel {
 
 export const initialState: ICategoryStateModel = {
   isLoading: false,
-  category: null
+  category: {
+    id: null,
+    name: '',
+    parentId: null,
+    description: ''
+  }
 };

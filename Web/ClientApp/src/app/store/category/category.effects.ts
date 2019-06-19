@@ -1,12 +1,9 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CategoryService } from './category.service';
 import { Injectable } from '@angular/core';
-import { catchError, switchMap, concatMap, map } from 'rxjs/operators';
+import { catchError, switchMap, map } from 'rxjs/operators';
 import { CategoryActionTypes, CategoryLoadCompleteAction, CategoryLoadAction } from './category.actions';
 import { of } from 'rxjs';
-import { Action, Store } from '@ngrx/store';
-import { ProductListRequestModel } from '../product-list/product-list.model';
-import { ProductListLoadAction } from '../product-list/product-list.actions';
 import { IAppStore } from '../storeRootModule';
 import { ICategoryModel } from './category.model';
 
@@ -17,8 +14,7 @@ export class CategoryEffects {
 
   constructor(
     private actions$: Actions,
-    private _srv: CategoryService,
-    private _store: Store<IAppStore>
+    private _srv: CategoryService
   ) {
   }
 

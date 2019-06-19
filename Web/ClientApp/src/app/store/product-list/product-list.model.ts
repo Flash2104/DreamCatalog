@@ -1,11 +1,14 @@
-import { ICategoryModel } from '../category/category.model';
-
 export interface IProductListStateModel {
   isLoading: boolean;
 
   totalElements: number;
+  currentPage: number;
   listData: IProductViewModel[];
   volume: number;
+
+  errors: {
+    messages: string[]
+  }
 }
 
 export interface IProductListResponseModel {
@@ -19,13 +22,14 @@ export interface IProductViewModel {
   imageId: number;
   price: number;
   quantity: number;
+  categoryId: number;
 }
 
 export interface IProductListRequestModel {
   categoryId: number;
   sort: ISortRequestModel;
   take: number;
-  skip: number;
+  page: number;
 }
 
 export interface ISortRequestModel {
@@ -37,12 +41,12 @@ export class ProductListRequestModel implements IProductListRequestModel {
   categoryId: number;
   sort: ISortRequestModel;
   take: number;
-  skip: number;
+  page: number;
 
   constructor(categoryId: number, sort: ISortRequestModel, page: number, volume: number) {
     this.categoryId = categoryId;
     this.sort = sort;
-    this.skip = (page - 1) * volume;
+    this.page = page;
     this.take = volume;
   }
 }
@@ -53,5 +57,9 @@ export const initialState: IProductListStateModel = {
   isLoading: false,
   listData: null,
   totalElements: null,
-  volume: 10
+  volume: 10,
+  currentPage: 1,
+  errors: {
+    messages: []
+  }
 };

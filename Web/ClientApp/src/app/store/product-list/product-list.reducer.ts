@@ -1,6 +1,6 @@
 import { IProductListStateModel, initialState } from './product-list.model';
 import { Action } from '@ngrx/store';
-import { ProductListActionTypes, ProductListLoadCompleteAction, ProductListGetVolumeCompleteAction } from './product-list.actions';
+import { ProductListActionTypes, ProductListLoadCompleteAction, ProductListGetVolumeCompleteAction, ProductListLoadAction, ProductListErrorAction } from './product-list.actions';
 
 export function productListReducer(state: IProductListStateModel = initialState, action: Action) {
   const model = { ...state };
@@ -25,6 +25,8 @@ export function productListReducer(state: IProductListStateModel = initialState,
       return model;
     }
     case ProductListActionTypes.Load: {
+      const actionComplete = action as ProductListLoadAction;
+      model.currentPage = actionComplete.payload.page;
       model.isLoading = true;
       return model;
     }
@@ -41,6 +43,12 @@ export function productListReducer(state: IProductListStateModel = initialState,
     }
     case ProductListActionTypes.DeleteComplete: {
       model.isLoading = false;
+      return model;
+    }
+    case ProductListActionTypes.Error : {
+      const payload = (<ProductListErrorAction> action).payload;
+      model.isLoading = false;
+      model.errors.messages.push(payload);
       return model;
     }
     default:

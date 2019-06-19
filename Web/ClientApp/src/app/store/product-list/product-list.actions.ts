@@ -10,7 +10,19 @@ export enum ProductListActionTypes {
   Load = "LoadProductList",
   LoadComplete = "LoadProductListComplete",
   Delete = "DeleteProducts",
-  DeleteComplete = "DeleteProductsComplete"
+  DeleteComplete = "DeleteProductsComplete",
+
+  Error = 'ErrorProductList'
+}
+
+
+export class ProductListErrorAction implements Action {
+  type = ProductListActionTypes.Error;
+  payload: string;
+
+  constructor(payload: string) {
+    this.payload = payload;
+  }
 }
 
 export class ProductListSetVolumeAction implements Action {

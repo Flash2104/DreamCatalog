@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseDestroyComponent } from '../BaseDestroyComponent';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
@@ -6,22 +6,25 @@ import { Store } from '@ngrx/store';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction, ProductCreateAction, ProductUpdateAction } from 'src/app/store/product/product.actions';
 import { filter } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { CloseDialogComponent } from '../common/close-dialog/close-dialog.component';
-import { IProductValidateError, IProductCreateRequestModel, IProductUpdateRequestModel } from 'src/app/store/product/product.model';
+import { IProductValidateError, IProductUpdateRequestModel } from 'src/app/store/product/product.model';
+import { RouteService } from 'src/app/services/route.service';
+import { NotificationComponent } from '../common/notifications/notification.component';
 
 @Component({
-  selector: 'app-product-info',
-  templateUrl: './product-info.component.html',
-  styleUrls: ['./product-info.component.css']
+  selector: 'app-product-view',
+  templateUrl: './product-view.component.html',
+  styleUrls: ['./product-view.component.css']
 })
-export class ProductInfoComponent extends BaseDestroyComponent implements OnInit {
+export class ProductViewComponent extends BaseDestroyComponent implements OnInit {
 
   requiredMessage: string = "Поле не должно быть пустым";
 
   productId?: number;
   categoryId: number;
   isChanged: boolean;
+  isCreate: boolean;
   errors: IProductValidateError[] = [];
 
   titleFormControl: FormControl;
@@ -31,14 +34,14 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
 
   productForm: FormGroup;
 
-
   store$ = this._store.select(s => s.productModuleStore);
 
   constructor(
-    private router: Router,
+    private _routeSrv: RouteService,
     private route: ActivatedRoute,
     private _store: Store<IAppStore>,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {
     super();
   }
@@ -54,10 +57,11 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
         this.productId = +pm.get('productId') || null;
-        if (this.productId) {
-          this._store.dispatch(new ProductLoadAction(+this.productId));
-        } else {
+        this.isCreate = !this.productId;
+        if (this.isCreate) {
           this._store.dispatch(new ProductInitAction());
+        } else {
+          this._store.dispatch(new ProductLoadAction(+this.productId));
         }
       });
 
@@ -85,6 +89,9 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
         this.isChanged = st.isChanged;
         const patchedValue = { ...st.changed, imageId: this.imageFormControl.value };
         this.productForm.patchValue(patchedValue, { emitEvent: false });
+        if(!!st.notifications && st.notifications.length > 0) {
+            this._snackBar.openFromComponent(NotificationComponent,{ verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: {message: st.notifications.pop()}})
+        }
       });
   }
 
@@ -104,12 +111,12 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
 
   onSave() {
     if (this.productForm.valid) {
-      const request: IProductUpdateRequestModel = { ...this.productForm.value };
-      if (this.productId) {
-        request.id = +this.productId;
-        this._store.dispatch(new ProductUpdateAction(request))
-      } else {
+      const request: IProductUpdateRequestModel = { ...this.productForm.value, categoryId: this.categoryId };
+      if (this.isCreate) {
         this._store.dispatch(new ProductCreateAction(request))
+      } else {
+        request.id = this.productId;
+        this._store.dispatch(new ProductUpdateAction(request))
       }
     }
   }
@@ -122,12 +129,8 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
     if (this.isChanged) {
       this.openDialog();
     } else {
-      this.navigateToParent();
+      this._routeSrv.navigateToCategory(this.categoryId);
     }
-  }
-
-  private navigateToParent() {
-    this.router.navigate(['catalog', 'category', this.categoryId]);
   }
 
   openDialog() {
@@ -135,7 +138,7 @@ export class ProductInfoComponent extends BaseDestroyComponent implements OnInit
 
     dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
       if (result) {
-        this.navigateToParent();
+        this._routeSrv.navigateToCategory(this.categoryId);
       }
     });
   }
