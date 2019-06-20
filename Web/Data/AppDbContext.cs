@@ -21,15 +21,15 @@ namespace Web.Data
 
         private void ConfigureCategoryProductBuilder(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbCategoryProduct>().HasKey(sc => new { sc.CategoryId, sc.ProductId });
-            modelBuilder.Entity<DbCategoryProduct>()
-                .HasOne(un => un.Category)
-                .WithMany(n => n.CategoryProducts)
-                .HasForeignKey(un => un.CategoryId);
-            modelBuilder.Entity<DbCategoryProduct>()
-                .HasOne(un => un.Product)
-                .WithMany(n => n.CategoryProducts)
-                .HasForeignKey(un => un.ProductId);
+            //modelBuilder.Entity<DbCategoryProduct>().HasKey(sc => new { sc.CategoryId, sc.ProductId });
+            //modelBuilder.Entity<DbCategoryProduct>()
+            //    .HasOne(un => un.Category)
+            //    .WithMany(n => n.CategoryProducts)
+            //    .HasForeignKey(un => un.CategoryId);
+            //modelBuilder.Entity<DbCategoryProduct>()
+            //    .HasOne(un => un.Product)
+            //    .WithMany(n => n.CategoryProducts)
+            //    .HasForeignKey(un => un.ProductId);
         }
 
 

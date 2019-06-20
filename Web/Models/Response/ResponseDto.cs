@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Web.Models
+namespace Web.Models.Response
 {
-    public class ResponseModel<T>
+    public class ResponseDto<T>
     {
         public bool Success { get; }
 
@@ -10,7 +10,7 @@ namespace Web.Models
 
         public Dictionary<string, string> Errors { get; }
 
-        public ResponseModel(bool success, T data)
+        public ResponseDto(bool success, T data)
         {
             Success = success;
             Data = data;

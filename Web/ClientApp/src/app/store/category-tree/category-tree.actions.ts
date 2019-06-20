@@ -3,7 +3,9 @@ import { ICategoryTreeModel } from './category-tree.model';
 
 export enum CategoryTreeActionTypes {
   Load = 'CategoryTreeLoad',
-  LoadComplete = 'CategoryTreeLoadComplete'
+  LoadComplete = 'CategoryTreeLoadComplete',
+
+  Error = 'CategoryTreeError'
 }
 
 export class CategoryTreeLoadAction implements Action {
@@ -15,6 +17,15 @@ export class CategoryTreeLoadCompleteAction implements Action {
   payload: ICategoryTreeModel[];
 
   constructor(payload: ICategoryTreeModel[]) {
+    this.payload = payload;
+  }
+}
+
+export class CategoryTreeErrorAction implements Action {
+  type = CategoryTreeActionTypes.Error;
+  payload: string;
+
+  constructor(payload: string) {
     this.payload = payload;
   }
 }

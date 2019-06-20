@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Web.Data.Entities;
 
@@ -10,10 +11,9 @@ namespace Web.Interfaces.Repository
     {
         Task<T> GetById(int id);
         Task<List<T>> ListAll();
-        Task<T> GetSingleBySpec(ISpecification<T> spec);
-        Task<List<T>> List(ISpecification<T> spec);
+        IQueryable<T> QueryByCondition(Expression<Func<T, bool>> expression);
         Task<T> Add(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
+        Task<T> Update(T entity);
+        Task DeleteRange(IEnumerable<T> entities);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Web.Data;
+﻿using System.Linq;
+using Web.Data;
 using Web.Data.Entities;
 using Web.Interfaces.Repository;
 
@@ -8,6 +9,11 @@ namespace Web.Repositories
     {
         public ProductRepository(AppDbContext appDbContext) : base(appDbContext)
         {
+        }
+
+        public IQueryable<DbProduct> QueryAll()
+        {
+            return _appDbContext.Products.AsQueryable();
         }
     }
 }

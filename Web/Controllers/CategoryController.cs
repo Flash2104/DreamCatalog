@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Web.Interfaces.Services;
-using Web.Models;
+using Web.Models.Response;
 
 namespace Web.Controllers
 {
@@ -18,16 +18,18 @@ namespace Web.Controllers
             this._categoryService = categoryService;
         }
 
-        [HttpGet]
-        public Task<ResponseModel<List<CategoryTreeModel>>> ListAllCategories()
+        [HttpGet("get-tree")]
+        public async Task<ResponseDto<List<CategoryTreeDto>>> ListAllCategories()
         {
-            return _categoryService.ListAllCategories();
+            await Task.Delay(1000);
+            return await _categoryService.ListAllCategories();
         }
 
-        [HttpGet("get/{id}")]
-        public Task<ResponseModel<CategoryModel>> GetCategory(int id)
+        [HttpGet("get")]
+        public async Task<ResponseDto<CategoryDto>> GetCategory(int id)
         {
-            return _categoryService.GetCategory(id);
+            await Task.Delay(1000);
+            return await _categoryService.GetCategory(id);
         }
     }
 }

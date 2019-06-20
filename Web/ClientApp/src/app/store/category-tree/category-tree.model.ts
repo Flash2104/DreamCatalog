@@ -2,6 +2,8 @@ export interface ICategoryTreeStateModel {
   isLoading: boolean;
 
   tree: ICategoryTreeModel[];
+
+  errors: string[];
 }
 
 export interface ICategoryTreeModel {
@@ -13,7 +15,8 @@ export interface ICategoryTreeModel {
 
 export const initialState: ICategoryTreeStateModel = {
   isLoading: false,
-  tree: null
+  tree: null,
+  errors: []
 };
 
 export const TEST_DATA: ICategoryTreeModel[] = [

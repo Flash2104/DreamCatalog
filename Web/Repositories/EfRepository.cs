@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Web.Data;
 using Web.Data.Entities;
@@ -27,48 +29,29 @@ namespace Web.Repositories
             return await _appDbContext.Set<T>().ToListAsync();
         }
 
-        public virtual async Task<T> GetSingleBySpec(ISpecification<T> spec)
-        {
-            var result = await List(spec);
-            return result.FirstOrDefault();
-        }
-
-        public virtual async Task<List<T>> List(ISpecification<T> spec)
-        {
-            // fetch a Queryable that includes all expression-based includes
-            var queryableResultWithIncludes = spec.Includes
-                .Aggregate(_appDbContext.Set<T>().AsQueryable(),
-                    (current, include) => current.Include(include));
-
-            // modify the IQueryable to include any string-based include statements
-            var secondaryResult = spec.IncludeStrings
-                .Aggregate(queryableResultWithIncludes,
-                    (current, include) => current.Include(include));
-
-            // return the result of the query using the specification's criteria expression
-            return await secondaryResult
-                            .Where(spec.Criteria)
-                            .ToListAsync();
-        }
-
-
         public virtual async Task<T> Add(T entity)
         {
             _appDbContext.Set<T>().Add(entity);
+            entity.Id = await _appDbContext.SaveChangesAsync();
+            return entity;
+        }
+
+        public virtual async Task<T> Update(T entity)
+        {
+            _appDbContext.Entry(entity).State = EntityState.Modified;
             await _appDbContext.SaveChangesAsync();
             return entity;
         }
 
-        public virtual async Task Update(T entity)
+        public virtual async Task DeleteRange(IEnumerable<T> entities)
         {
-            _appDbContext.Entry(entity).State = EntityState.Modified;
+            _appDbContext.Set<T>().RemoveRange(entities);
             await _appDbContext.SaveChangesAsync();
         }
 
-        public virtual async Task Delete(T entity)
+        public virtual IQueryable<T> QueryByCondition(Expression<Func<T, bool>> expression)
         {
-            _appDbContext.Set<T>().Remove(entity);
-            await _appDbContext.SaveChangesAsync();
+            return _appDbContext.Set<T>().Where(expression);
         }
     }
 }

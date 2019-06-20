@@ -5,7 +5,9 @@ export enum CategoryActionTypes {
   Init = 'CategoryInit',
 
   Load = 'CategoryLoad',
-  LoadComplete = 'CategoryLoadComplete'
+  LoadComplete = 'CategoryLoadComplete',
+
+  Error = 'CategoryLoadError'
 }
 
 export class CategoryInitAction implements Action {
@@ -29,5 +31,15 @@ export class CategoryLoadCompleteAction implements Action {
 
   constructor(payload: ICategoryModel) {
     this.payload = { ...payload };
+  }
+}
+
+
+export class CategoryErrorAction implements Action {
+  type = CategoryActionTypes.Error;
+  payload: string;
+
+  constructor(payload: string) {
+    this.payload = payload;
   }
 }

@@ -40,7 +40,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   ngOnInit() {
-    this._store.dispatch(new ProductListGetVolumeAction());
+    // this._store.dispatch(new ProductListGetVolumeAction());
 
     this.sort.sortChange
       .pipe(this.takeUntilDestroyed())
@@ -88,12 +88,18 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   isAllSelected() {
+    if(!this.dataSource || !this.dataSource.data) {
+      return false;
+    }
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
   masterToggle() {
+    if(!this.dataSource || !this.dataSource.data) {
+      return;
+    }
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));

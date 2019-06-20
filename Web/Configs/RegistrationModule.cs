@@ -4,7 +4,7 @@ using Web.Interfaces.Services;
 using Web.Repositories;
 using Web.Services;
 
-namespace Web
+namespace Web.Configs
 {
     public class RegistrationModule : Module
     {

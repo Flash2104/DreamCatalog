@@ -1,8 +1,10 @@
-﻿using Web.Data.Entities;
+﻿using System.Linq;
+using Web.Data.Entities;
 
 namespace Web.Interfaces.Repository
 {
-    internal interface IProductRepository: IRepository<DbProduct>
+    public interface IProductRepository: IRepository<DbProduct>
     {
+        IQueryable<DbProduct> QueryAll();
     }
 }

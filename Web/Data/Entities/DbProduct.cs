@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Web.Data.Entities
 {
@@ -10,10 +11,16 @@ namespace Web.Data.Entities
 
         public int Quantity { get; set; }
 
+        [Column(nameof(Image))]
         public int ImageId { get; set; }
 
+        [ForeignKey(nameof(ImageId))]
         public virtual DbImage Image { get; set; }
 
-        public IList<DbCategoryProduct> CategoryProducts { get; set; }
+        [Column(nameof(Category))]
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public virtual DbCategory Category { get; set; }
     }
 }

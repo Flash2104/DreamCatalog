@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Web.Models
+namespace Web.Models.Response
 {
-    public abstract class BaseEntityModel
+    public abstract class BaseEntityDto
     {
         public int Id { get; set; }
-
     }
 }

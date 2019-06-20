@@ -19,9 +19,9 @@ export class ProductListEffects {
   loadProductList$ = this.actions$.pipe(
     ofType(ProductListActionTypes.Load),
     switchMap((action: ProductListLoadAction) => this._srv.getList(action.payload)),
-    map((response: IProductListResponseModel) => {
-      if (!!response) {
-        return new ProductListLoadCompleteAction(response);
+    map((response: IResponse<IProductListResponseModel>) => {
+      if (!!response && response.success) {
+        return new ProductListLoadCompleteAction(response.data);
       }
       return new ProductListErrorAction('load list error');
     }),

@@ -1,6 +1,8 @@
 export interface ICategoryStateModel {
   isLoading: boolean;
   category: ICategoryModel;
+
+  errors: string[];
 }
 
 export interface ICategoryModel {
@@ -21,5 +23,6 @@ export const initialState: ICategoryStateModel = {
     name: '',
     parentId: null,
     description: ''
-  }
+  },
+  errors: []
 };

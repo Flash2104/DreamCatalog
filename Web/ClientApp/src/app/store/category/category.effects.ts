@@ -2,10 +2,10 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CategoryService } from './category.service';
 import { Injectable } from '@angular/core';
 import { catchError, switchMap, map } from 'rxjs/operators';
-import { CategoryActionTypes, CategoryLoadCompleteAction, CategoryLoadAction } from './category.actions';
+import { CategoryActionTypes, CategoryLoadCompleteAction, CategoryLoadAction, CategoryErrorAction } from './category.actions';
 import { of } from 'rxjs';
-import { IAppStore } from '../storeRootModule';
 import { ICategoryModel } from './category.model';
+import { IResponse } from '../models';
 
 @Injectable()
 export class CategoryEffects {
@@ -23,11 +23,11 @@ export class CategoryEffects {
     .pipe(
       ofType(CategoryActionTypes.Load),
       switchMap((action: CategoryLoadAction) => this._srv.get(action.payload.id)),
-      map((resp) => {
-        if (!!resp) {
-          return new CategoryLoadCompleteAction(resp);
+      map((resp: IResponse<ICategoryModel>) => {
+        if (!!resp && resp.success) {
+          return new CategoryLoadCompleteAction(resp.data);
         }
-        return new CategoryLoadCompleteAction({} as ICategoryModel);
+        return new CategoryErrorAction('Ошибка загрузки категории!');
       }),
       catchError(error => of(console.log('Ошибка loadCategories effect!: ', error)))
     )

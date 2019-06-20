@@ -3,18 +3,24 @@ import { IProductViewModel, IProductListRequestModel, VOLUME_KEY, IProductListRe
 import { Observable, of } from 'rxjs';
 import { IResponse, HTTP_HEADERS } from '../models';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListService {
-  private productListUrl = 'api/product-list';
+  private productListUrl = 'api/product';
 
   constructor(
     private _http: HttpClient
   ) { }
 
-  getList(request: IProductListRequestModel): Observable<IProductListResponseModel> {
-    return this.getMock(request);
+  getList(request: IProductListRequestModel): Observable<IResponse<IProductListResponseModel>> {
+    //return this.getMock(request);
+    if(!!request.sort && !!request.sort.column) {
+      if(request.sort.direction == 'asc') {
+        request.sort['isAsc'] = true;
+      }
+    }
+    const res$ = this._http.post<IResponse<IProductListResponseModel>>(`${this.productListUrl}/query-list`, request, { headers: HTTP_HEADERS });
+    return res$;
   }
 
   delete(request: number[]): Observable<IResponse<any>> {
@@ -38,7 +44,7 @@ export class ProductListService {
   }
 
   private getMock(request: IProductListRequestModel): Observable<IProductListResponseModel> {
-    let list: IProductViewModel[] =  PRODUCT_LIST.slice();
+    let list: IProductViewModel[] = PRODUCT_LIST.slice();
 
     if (!!request.sort) {
       const col = request.sort.column;

@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Web.Configs;
 using Web.Data;
 
 namespace Web
@@ -25,7 +27,7 @@ namespace Web
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // ToDo: (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Web")));
-            services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("AppDbContext"));
+            services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -37,6 +39,15 @@ namespace Web
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.RegisterModule(new RegistrationModule());
+
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             containerBuilder.Populate(services);
             var container = containerBuilder.Build();

@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
-using Web.Models;
+using System.Threading.Tasks;
+using Web.Models.Response;
 using Web.Models.Request;
 
 namespace Web.Interfaces.Services
 {
     public interface IProductService
     {
-        ResponseModel<List<ProductModel>> ListAll(int categoryId);
+        ResponseDto<ProductListDto> QueryList(ProductListQueryDto query);
 
-        ResponseModel<List<ProductModel>> QueryList(ProductListQueryModel query);
+        Task<ResponseDto<ProductDto>> CreateProduct(ProductUpdateRequestDto model);
 
-        ResponseModel<ProductModel> CreateProduct(ProductCreateRequestModel model);
+        Task<ResponseDto<ProductDto>> UpdateProduct(ProductUpdateRequestDto model);
 
-        ResponseModel<ProductModel> UpdateProduct(ProductUpdateRequestModel model);
-
-        ResponseModel<int> DeleteProducts(int[] ids);
+        Task<ResponseDto<int>> DeleteProducts(int[] ids);
     }
 }
