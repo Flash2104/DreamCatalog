@@ -25,6 +25,13 @@ namespace Web.Controllers
             return _productService.QueryList(query);
         }
 
+        [HttpGet("get")]
+        public async Task<ResponseDto<ProductDto>> GetProduct(int id)
+        {
+            await Task.Delay(1000);
+            return await _productService.GetProduct(id);
+        }
+
         [HttpPost("create")]
         public async Task<ResponseDto<ProductDto>> CreateProduct([FromBody] ProductUpdateRequestDto model)
         {

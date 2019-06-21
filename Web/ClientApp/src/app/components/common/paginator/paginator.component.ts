@@ -110,12 +110,12 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
       this.page$.next(trigger);
     } else {
       if (trigger === '>') {
-        this.page$.next(this.page + 1);
+        this.page$.next(this.fixPage(this.page + this.spanButtons));
         if (this.page + 1 > this.rightPage) {
           this.fillArray(this.page + 1, this.page + this.spanButtons + 1);
         }
       } else if (trigger === '<') {
-        this.page$.next(this.page - 1);
+        this.page$.next(this.fixPage(this.page - this.spanButtons));
         if (this.page - 1 < this.leftPage) {
           this.fillArray(this.page - this.spanButtons - 1, this.page - 1);
         }
@@ -127,12 +127,22 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
     }
   }
 
-  goLast() {
+  private fixPage(page: number): number {
+    if (page < 1) {
+      return 1;
+    } else if (page > this.totalPages) {
+      return this.totalPages;
+    } else {
+      return page;
+    }
+  }
+
+  private goLast() {
     this.page$.next(this.totalPages);
     this.fillArray(this.totalPages - this.spanButtons, this.totalPages);
   }
 
-  goFirst() {
+  private goFirst() {
     this.page$.next(1);
     this.initTriggers();
   }

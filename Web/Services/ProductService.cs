@@ -17,15 +17,18 @@ namespace Web.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IImageRepository _imageRepository;
         private readonly IMapper _mapper;
 
         public ProductService(
             IProductRepository productRepository,
             ICategoryRepository categoryRepository,
+            IImageRepository imageRepository,
             IMapper mapper)
         {
             this._productRepository = productRepository;
             this._categoryRepository = categoryRepository;
+            this._imageRepository = imageRepository;
             this._mapper = mapper;
         }
 
@@ -105,7 +108,23 @@ namespace Web.Services
         //    var orderByExp = Expression.Lambda(propertyAccess, parameter);
         //    MethodCallExpression resultExp = Expression.Call(typeof(Queryable), method, new Type[] { type, property.PropertyType }, source.Expression, Expression.Quote(orderByExp));
         //    return source.Provider.CreateQuery<T>(resultExp);
-        //}
+        //}   
+        
+        public async Task<ResponseDto<ProductDto>> GetProduct(int id)
+        {
+            var dbModel = await _productRepository.GetById(id);
+            if (dbModel == null)
+            {
+                return new ResponseDto<ProductDto>(false, null);
+            }
+            var model = _mapper.Map<ProductDto>(dbModel);
+            if (dbModel.ImageId.HasValue)
+            {
+                var image = await _imageRepository.GetById(dbModel.ImageId.Value);
+                model.Image = _mapper.Map<ImageDto>(image);
+            }
+            return new ResponseDto<ProductDto>(true, model);
+        }
 
         public async Task<ResponseDto<ProductDto>> CreateProduct(ProductUpdateRequestDto model)
         {
@@ -115,7 +134,7 @@ namespace Web.Services
             {
                 return new ResponseDto<ProductDto>(false, null);
             }
-            return new ResponseDto<ProductDto>(false, _mapper.Map<ProductDto>(created));
+            return new ResponseDto<ProductDto>(true, _mapper.Map<ProductDto>(created));
         }
 
         public async Task<ResponseDto<ProductDto>> UpdateProduct(ProductUpdateRequestDto model)
@@ -126,7 +145,7 @@ namespace Web.Services
             {
                 return new ResponseDto<ProductDto>(false, null);
             }
-            return new ResponseDto<ProductDto>(false, _mapper.Map<ProductDto>(updated));
+            return new ResponseDto<ProductDto>(true, _mapper.Map<ProductDto>(updated));
         }
 
         public async Task<ResponseDto<int>> DeleteProducts(int[] ids)

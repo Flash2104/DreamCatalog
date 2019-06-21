@@ -5,7 +5,8 @@ import {
   ProductAddChangeAction,
   ProductCreateCompleteAction,
   ProductLoadCompleteAction,
-  ProductUpdateCompleteAction
+  ProductUpdateCompleteAction,
+  ProductErrorAction
 } from './product.actions';
 
 export function productReducer(state: IProductStateModel = initialState, action: Action) {
@@ -60,6 +61,14 @@ export function productReducer(state: IProductStateModel = initialState, action:
       model.product = { ...loadCompleteAction.payload };
       model.changed = { ...loadCompleteAction.payload };
       model.isLoading = false;
+      return model;
+    }
+    case (ProductActionTypes.Error): {
+      const payload = (<ProductErrorAction>action).payload;
+      model.isLoading = false;
+      model.isChanged = false;
+      model.changed = { ...model.product };
+      model.errors.messages.push(payload);
       return model;
     }
     default:

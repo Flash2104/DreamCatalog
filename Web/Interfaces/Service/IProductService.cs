@@ -9,6 +9,8 @@ namespace Web.Interfaces.Services
     {
         ResponseDto<ProductListDto> QueryList(ProductListQueryDto query);
 
+        Task<ResponseDto<ProductDto>> GetProduct(int id);
+
         Task<ResponseDto<ProductDto>> CreateProduct(ProductUpdateRequestDto model);
 
         Task<ResponseDto<ProductDto>> UpdateProduct(ProductUpdateRequestDto model);

@@ -12,7 +12,7 @@ namespace Web.Data.Entities
         public int Quantity { get; set; }
 
         [Column(nameof(Image))]
-        public int ImageId { get; set; }
+        public int? ImageId { get; set; }
 
         [ForeignKey(nameof(ImageId))]
         public virtual DbImage Image { get; set; }

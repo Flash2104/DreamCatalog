@@ -50,14 +50,11 @@ namespace Web.Services
         public async Task<ResponseDto<CategoryDto>> GetCategory(int id)
         {
             var category = await _categoryReposytory.GetById(id);
-            var model = new CategoryDto()
+            if(category == null)
             {
-                Id = category.Id,
-                Name = category.Name,
-                ParentId = category.ParentId,
-                Description = category.Description
-            };
-            return new ResponseDto<CategoryDto>(true, model);
+                return new ResponseDto<CategoryDto>(false, null);
+            }
+            return new ResponseDto<CategoryDto>(true, _mapper.Map<CategoryDto>(category));
         }
     }
 }

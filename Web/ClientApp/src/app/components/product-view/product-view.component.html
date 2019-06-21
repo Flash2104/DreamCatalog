@@ -24,22 +24,37 @@
     <hr />
     <form class="form-group" [formGroup]="productForm">
       <mat-form-field appearance="outline">
+        <mat-label>Фото</mat-label>
+        <img *ngIf="!!imageBase64" src="data:image/png;base64, {{imageBase64}}">
+        <img *ngIf="!imageBase64" src="default.jpg">
+        <input matInput class="ng-hide" id="input-file-id" type="text" formControlName="image"/>
+        <label for="input-file-id" class="md-button md-raised md-primary"></label>
+        <small *ngIf="titleFormControl.errors && titleFormControl.errors.required"
+          class="form-text text-muted">{{requiredMessage}}</small>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Название</mat-label>
         <input matInput type="text" formControlName="title">
-        <small *ngIf="titleFormControl.errors && titleFormControl.errors.required" class="form-text text-muted">{{requiredMessage}}</small>
+        <small *ngIf="titleFormControl.errors && titleFormControl.errors.required"
+          class="form-text text-muted">{{requiredMessage}}</small>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Цена</mat-label>
         <input matInput type="text" formControlName="price">
-        <small *ngIf="priceFormControl.errors && priceFormControl.errors.required" class="form-text text-muted">{{requiredMessage}}</small>
-        <small *ngIf="priceFormControl.errors && priceFormControl.errors.numberKey" class="form-text text-muted">Упс, не число!</small>
+        <small *ngIf="priceFormControl.errors && priceFormControl.errors.required"
+          class="form-text text-muted">{{requiredMessage}}</small>
+        <small *ngIf="priceFormControl.errors && priceFormControl.errors.numberKey" class="form-text text-muted">Упс, не
+          число!</small>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Количество</mat-label>
         <input matInput type="text" placeholder="Количество" formControlName="quantity">
-        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.required" class="form-text text-muted">{{requiredMessage}}</small>
-        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.numberKey" class="form-text text-muted">Упс, не число!</small>
-        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.integer" class="form-text text-muted">Количество должно быть целочисленным!</small>
+        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.required"
+          class="form-text text-muted">{{requiredMessage}}</small>
+        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.numberKey"
+          class="form-text text-muted">Упс, не число!</small>
+        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.integer"
+          class="form-text text-muted">Количество должно быть целочисленным!</small>
       </mat-form-field>
     </form>
   </div>

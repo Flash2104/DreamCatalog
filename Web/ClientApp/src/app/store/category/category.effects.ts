@@ -6,6 +6,7 @@ import { CategoryActionTypes, CategoryLoadCompleteAction, CategoryLoadAction, Ca
 import { of } from 'rxjs';
 import { ICategoryModel } from './category.model';
 import { IResponse } from '../models';
+import { prepareErrorMessage } from 'src/app/services/helper';
 
 @Injectable()
 export class CategoryEffects {
@@ -27,6 +28,7 @@ export class CategoryEffects {
         if (!!resp && resp.success) {
           return new CategoryLoadCompleteAction(resp.data);
         }
+        let messages: string = prepareErrorMessage(resp);
         return new CategoryErrorAction('Ошибка загрузки категории!');
       }),
       catchError(error => of(console.log('Ошибка loadCategories effect!: ', error)))

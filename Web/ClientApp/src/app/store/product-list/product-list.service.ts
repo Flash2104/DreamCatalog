@@ -2,11 +2,13 @@ import { Injectable } from "@angular/core";
 import { IProductViewModel, IProductListRequestModel, VOLUME_KEY, IProductListResponseModel } from './product-list.model';
 import { Observable, of } from 'rxjs';
 import { IResponse, HTTP_HEADERS } from '../models';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/internal/operators/catchError';
+
+export const PRODUCT_LIST_URL = 'api/product';
 
 @Injectable({ providedIn: 'root' })
 export class ProductListService {
-  private productListUrl = 'api/product';
 
   constructor(
     private _http: HttpClient
@@ -20,16 +22,26 @@ export class ProductListService {
       }
     }
     request['skip'] = (request.page - 1) * request.take;
-    const res$ = this._http.post<IResponse<IProductListResponseModel>>(`${this.productListUrl}/query-list`, request, { headers: HTTP_HEADERS });
-    return res$;
+    const res$ = this._http.post<IResponse<IProductListResponseModel>>(`${PRODUCT_LIST_URL}/query-list`, request, { headers: HTTP_HEADERS });
+    return res$.pipe(
+      catchError(error => {
+        console.log('Server error: ', error);
+        return of(<IResponse<any>>{ data: {}, errors: error, success: false });
+      })
+    );
   }
 
   delete(request: number[]): Observable<IResponse<any>> {
-    const res$ = this._http.request<IResponse<any>>('DELETE', `${this.productListUrl}/delete`, {
+    const res$ = this._http.request<IResponse<any>>('DELETE', `${PRODUCT_LIST_URL}/delete`, {
       headers: HTTP_HEADERS,
       body: request
     })
-    return res$;
+    return res$.pipe(
+      catchError(error => {
+        console.log('Server error: ', error);
+        return of(<IResponse<any>>{ data: {}, errors: error, success: false });
+      })
+    );
   }
 
   setVolume(volume: number): Observable<any> {

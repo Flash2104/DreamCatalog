@@ -2,10 +2,11 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductListService } from './product-list.service';
 import { ProductListActionTypes, ProductListLoadAction, ProductListLoadCompleteAction, ProductListSetVolumeAction, ProductListGetVolumeAction, ProductListGetVolumeCompleteAction, ProductListSetVolumeCompleteAction, ProductsDeleteAction, ProductsDeleteCompleteAction, ProductListErrorAction } from './product-list.actions';
-import { map, catchError, switchMap, concatMap, exhaustMap } from 'rxjs/operators';
+import { map, catchError, exhaustMap } from 'rxjs/operators';
 import { IProductListResponseModel } from './product-list.model';
 import { of } from 'rxjs';
 import { IResponse } from '../models';
+import { prepareErrorMessage } from 'src/app/services/helper';
 
 @Injectable()
 export class ProductListEffects {
@@ -23,7 +24,9 @@ export class ProductListEffects {
       if (!!response && response.success) {
         return new ProductListLoadCompleteAction(response.data);
       }
-      return new ProductListErrorAction('load list error');
+      // let messages: string = prepareErrorMessage(response);
+
+      return new ProductListErrorAction('Ошибки при получении списка продуктов:\r\n ');
     }),
     catchError(error => of(console.log('Ошибка loadProductList effect!: ', error)))
   )
@@ -32,11 +35,13 @@ export class ProductListEffects {
   deleteProducts$ = this.actions$.pipe(
     ofType(ProductListActionTypes.Delete),
     exhaustMap((action: ProductsDeleteAction) => this._srv.delete(action.payload)),
-    map((response: IResponse<any>) => {
-      if(response.success){
+    map((response: IResponse<number[]>) => {
+      if (response.success) {
         return new ProductsDeleteCompleteAction();
       }
-      return new ProductListErrorAction('delete products error');
+      // let messages: string = prepareErrorMessage(response);
+
+      return new ProductListErrorAction('Ошибки при удалении продуктов:\r\n ');
     }),
     catchError(error => of(console.log('Ошибка loadProductList effect!: ', error)))
   )

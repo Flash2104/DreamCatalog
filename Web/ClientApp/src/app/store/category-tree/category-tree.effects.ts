@@ -6,6 +6,7 @@ import { CategoryTreeActionTypes, CategoryTreeLoadCompleteAction, CategoryTreeEr
 import { ICategoryTreeModel } from './category-tree.model';
 import { of } from 'rxjs';
 import { IResponse } from '../models';
+import { prepareErrorMessage } from 'src/app/services/helper';
 
 @Injectable()
 export class CategoryTreeEffects {
@@ -25,7 +26,8 @@ export class CategoryTreeEffects {
         if (resp.success) {
           return new CategoryTreeLoadCompleteAction(resp.data);
         }
-        return new CategoryTreeErrorAction('Ошибка загрузки дерева категорий');
+        // let messages: string = prepareErrorMessage(resp);
+        return new CategoryTreeErrorAction('Ошибки загрузки дерева категорий: \r\n');
       }),
       catchError(error => of(console.log('Ошибка loadCategories effect!: ', error)))
     )

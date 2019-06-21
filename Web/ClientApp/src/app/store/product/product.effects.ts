@@ -1,16 +1,18 @@
 import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductService } from './product.service';
-import { ProductActionTypes, ProductCreateAction, ProductCreateCompleteAction, ProductLoadAction, ProductUpdateAction, ProductUpdateCompleteAction, ProductLoadCompleteAction, ProductInitAction } from './product.actions';
+import { ProductActionTypes, ProductCreateAction, ProductCreateCompleteAction, ProductLoadAction, ProductUpdateAction, ProductUpdateCompleteAction, ProductLoadCompleteAction, ProductInitAction, ProductErrorAction } from './product.actions';
 import { switchMap, map, catchError, concatMap, exhaustMap } from 'rxjs/operators';
 import { IProductModel } from './product.model';
 import { BaseDestroyComponent } from 'src/app/components/BaseDestroyComponent';
-import { of } from 'rxjs';
+import { of, pipe } from 'rxjs';
 import { IProductListRequestModel } from '../product-list/product-list.model';
 import { ProductListLoadAction } from '../product-list/product-list.actions';
 import { RouteService } from 'src/app/services/route.service';
 import { State } from '@ngrx/store';
 import { IAppStore } from '../storeRootModule';
+import { IResponse } from '../models';
+import { prepareErrorMessage } from 'src/app/services/helper';
 
 @Injectable()
 export class ProductEffects extends BaseDestroyComponent {
@@ -27,12 +29,13 @@ export class ProductEffects extends BaseDestroyComponent {
   createProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.Create),
     exhaustMap((action: ProductCreateAction) => this._srv.create(action.payload)),
-    map((res: IProductModel) => {
-      if (res) {
-        return new ProductCreateCompleteAction(res);
-      } else {
-        return new ProductInitAction();
+    map((res: IResponse<IProductModel>) => {
+      if (res.success) {
+        return new ProductCreateCompleteAction(res.data);
       }
+      // let messages: string = prepareErrorMessage(res);
+
+      return new ProductErrorAction('Ошибки при получении продукта:\r\n ');
     }),
     catchError(error => of(console.log('Ошибка createProduct effect!: ', error)))
   );
@@ -57,11 +60,12 @@ export class ProductEffects extends BaseDestroyComponent {
   updateProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.Update),
     exhaustMap((action: ProductUpdateAction) => this._srv.update(action.payload)),
-    map((res: IProductModel) => {
-      if (res) {
-        return new ProductUpdateCompleteAction(res);
+    map((res: IResponse<IProductModel>) => {
+      if (res.success) {
+        return new ProductUpdateCompleteAction(res.data);
       }
-      return new ProductInitAction();
+      // let messages: string = prepareErrorMessage(res);
+      return new ProductErrorAction('Ошибки при получении продукта:\r\n ');
     }),
     catchError(error => of(console.log('Ошибка updateProduct effect!: ', error)))
   );
@@ -88,11 +92,12 @@ export class ProductEffects extends BaseDestroyComponent {
   @Effect()
   loadProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.Load),
-    switchMap((action: ProductLoadAction) => this._srv.get(action.payload)),
-    map((res: IProductModel) => {
-      if (res) {
-        return new ProductLoadCompleteAction(res);
-      } else {
+    exhaustMap((action: ProductLoadAction) => this._srv.get(action.payload)),
+    map((res: IResponse<IProductModel>) => {
+      if (res.success) {
+        return new ProductLoadCompleteAction(res.data);
+      }
+      else {
         const categoryId = !!this._state.value && !!this._state.value.categoryModuleStore
           && !!this._state.value.categoryModuleStore.category
           && this._state.value.categoryModuleStore.category.id;
@@ -101,8 +106,9 @@ export class ProductEffects extends BaseDestroyComponent {
         } else {
           this._routeSrv.navigateToCatalog();
         }
-        return new ProductInitAction();
       }
+      // let messages: string = prepareErrorMessage(res);
+      return new ProductErrorAction('Ошибки при получении продукта:\r\n');
     }),
     catchError(error => of(console.log('Ошибка loadProduct effect!: ', error)))
   );

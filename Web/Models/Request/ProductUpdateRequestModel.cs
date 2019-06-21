@@ -1,4 +1,6 @@
 ﻿
+using Web.Models.Response;
+
 namespace Web.Models.Request
 {
     public class ProductUpdateRequestDto
@@ -13,6 +15,6 @@ namespace Web.Models.Request
 
         public int CategoryId { get; set; }
 
-        // ToDo: public int ImageId { get; set; }
+        public ImageDto Image { get; set; }
     }
 }

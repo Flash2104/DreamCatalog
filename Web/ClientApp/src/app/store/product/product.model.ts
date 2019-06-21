@@ -6,6 +6,9 @@ export interface IProductStateModel {
   changed: IProductModel;
 
   notifications: string[];
+  errors: {
+    messages: string[]
+  }
 }
 
 export interface IProductValidateError {
@@ -16,16 +19,22 @@ export interface IProductValidateError {
 export interface IProductModel {
   id: number;
   title: string;
-  imageId: number;
+  image: IImageModel;
   price: number;
   quantity: number;
   categoryId: number;
 }
 
+export interface IImageModel {
+  id: number;
+  title: string;
+  buffer: []
+}
+
 export interface IProductDetailOptions {
-   isCreate: boolean;
-   id?: number;
-   categoryId: number;
+  isCreate: boolean;
+  id?: number;
+  categoryId: number;
 }
 
 export interface IProductFieldChange {
@@ -36,7 +45,7 @@ export interface IProductFieldChange {
 export interface IProductCreateRequestModel {
   title: string;
   price: number;
-  imageId: number;
+  image: IImageModel;
   quantity: number;
   categoryId: number;
 }
@@ -50,7 +59,7 @@ export const initialState: IProductStateModel = {
   isChanged: false,
   product: {
     id: null,
-    imageId: null,
+    image: null,
     price: null,
     quantity: null,
     title: '',
@@ -58,11 +67,14 @@ export const initialState: IProductStateModel = {
   },
   changed: {
     id: null,
-    imageId: null,
+    image: null,
     price: null,
     quantity: null,
     title: '',
     categoryId: null
   },
-  notifications: []
+  notifications: [],
+  errors: {
+    messages: []
+  }
 }

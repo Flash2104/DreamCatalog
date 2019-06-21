@@ -4,6 +4,7 @@ import { ICategoryModel } from './category.model';
 import { TEST_DATA, ICategoryTreeModel } from '../category-tree/category-tree.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { HTTP_HEADERS, IResponse } from '../models';
+import { catchError } from 'rxjs/internal/operators/catchError';
 
 export const CATEGORY_URL = 'api/category';
 
@@ -17,7 +18,12 @@ export class CategoryService {
   get(id: number): Observable<IResponse<ICategoryModel>> {
     let params = new HttpParams().set('id', id.toString());
     const res$ = this._http.get<IResponse<ICategoryModel>>(`${CATEGORY_URL}/get`, {headers: HTTP_HEADERS, params: params});
-    return res$;
+    return res$.pipe(
+      catchError(error => {
+        console.log('Server error: ', error);
+        return of(<IResponse<any>>{ data: {}, errors: error, success: false });
+      })
+    );
   }
 
   private getMock(id: number): Observable<ICategoryModel> {

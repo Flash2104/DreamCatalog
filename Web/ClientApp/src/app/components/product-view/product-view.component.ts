@@ -25,6 +25,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
   categoryId: number;
   isChanged: boolean;
   isCreate: boolean;
+  imageBase64: string;
   errors: IProductValidateError[] = [];
 
   titleFormControl: FormControl;
@@ -74,7 +75,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
       title: this.titleFormControl,
       price: this.priceFormControl,
       quantity: this.quantityFormControl,
-      imageId: this.imageFormControl
+      image: this.imageFormControl
     });
 
     this.productForm.valueChanges.pipe(this.takeUntilDestroyed()).subscribe((product) => {

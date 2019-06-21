@@ -14,6 +14,7 @@ namespace Web.Configs
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductRepository>().As<IProductRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ImageRepository>().As<IImageRepository>().InstancePerLifetimeScope();
         }
     }
 }
