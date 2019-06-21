@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductService } from './product.service';
 import { ProductActionTypes, ProductCreateAction, ProductCreateCompleteAction, ProductLoadAction, ProductUpdateAction, ProductUpdateCompleteAction, ProductLoadCompleteAction, ProductInitAction } from './product.actions';
-import { switchMap, map, catchError, concatMap } from 'rxjs/operators';
+import { switchMap, map, catchError, concatMap, exhaustMap } from 'rxjs/operators';
 import { IProductModel } from './product.model';
 import { BaseDestroyComponent } from 'src/app/components/BaseDestroyComponent';
 import { of } from 'rxjs';
@@ -26,7 +26,7 @@ export class ProductEffects extends BaseDestroyComponent {
   @Effect()
   createProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.Create),
-    switchMap((action: ProductCreateAction) => this._srv.create(action.payload)),
+    exhaustMap((action: ProductCreateAction) => this._srv.create(action.payload)),
     map((res: IProductModel) => {
       if (res) {
         return new ProductCreateCompleteAction(res);
@@ -56,7 +56,7 @@ export class ProductEffects extends BaseDestroyComponent {
   @Effect()
   updateProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.Update),
-    switchMap((action: ProductUpdateAction) => this._srv.update(action.payload)),
+    exhaustMap((action: ProductUpdateAction) => this._srv.update(action.payload)),
     map((res: IProductModel) => {
       if (res) {
         return new ProductUpdateCompleteAction(res);

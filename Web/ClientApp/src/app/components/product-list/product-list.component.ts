@@ -19,7 +19,7 @@ import { PaginatorComponent } from '../common/paginator/paginator.component';
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
   page: number = 1;
-  volume: number = 5;
+  volume: number = 10;
   categoryId: number;
   totalElements: number;
   totalPages: number;
@@ -40,8 +40,6 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   ngOnInit() {
-    // this._store.dispatch(new ProductListGetVolumeAction());
-
     this.sort.sortChange
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {

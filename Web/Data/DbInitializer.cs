@@ -81,7 +81,7 @@ namespace Web.Data
             var products = new List<DbProduct>();
             for (int i = 1; i <= count; i++)
             {
-                var categoryIndex = random.Next(0, 5);
+                var categoryIndex = random.Next(0, 6);
                 var categoryId = categoryIds[categoryIndex];
                 var price = random.Next(100, 1000) + (decimal) random.NextDouble();
                 var quantity = random.Next(10, 100);

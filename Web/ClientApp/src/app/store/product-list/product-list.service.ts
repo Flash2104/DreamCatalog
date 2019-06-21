@@ -19,6 +19,7 @@ export class ProductListService {
         request.sort['isAsc'] = true;
       }
     }
+    request['skip'] = (request.page - 1) * request.take;
     const res$ = this._http.post<IResponse<IProductListResponseModel>>(`${this.productListUrl}/query-list`, request, { headers: HTTP_HEADERS });
     return res$;
   }

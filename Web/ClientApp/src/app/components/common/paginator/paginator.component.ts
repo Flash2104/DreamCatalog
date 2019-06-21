@@ -4,6 +4,8 @@ import { debounceTime, filter } from 'rxjs/operators';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { Store } from '@ngrx/store';
 
+const FIRST_PAGE = 1;
+
 @Component({
   selector: 'app-paginator',
   templateUrl: './paginator.component.html',
@@ -17,12 +19,13 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
   @Input() volume: number = 10;
   @Output() page$: EventEmitter<number> = new EventEmitter(true);
 
-
   page: number = 1;
   count: number;
   triggers: any[] = [];
   leftPage: number = 1;
   rightPage: number;
+
+  store$ = this._store.select(s => s.productListModuleStore);
 
   constructor(
     private _store: Store<IAppStore>
@@ -36,6 +39,7 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
       this.rightPage = this.spanButtons;
     }
 
+    this.calculateTotalPages();
     this.initTriggers();
 
     this.page$
@@ -44,8 +48,31 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
         this.page = v;
         this.count = v * this.volume;
       });
+
+    this.store$
+      .pipe(this.takeUntilDestroyed())
+      .subscribe(pl => {
+        this.page = pl.currentPage;
+        this.totalElements = pl.totalElements;
+        this.calculateTotalPages();
+        this.fillButtonArray();
+      });
   }
 
+  private calculateTotalPages() {
+    const isRemainder = this.totalElements % this.volume !== 0;
+    this.totalPages = isRemainder ? (this.totalElements / this.volume) + 1 | 0 : this.totalElements / this.volume | 0;
+  }
+
+  private fillButtonArray() {
+    if (this.page === FIRST_PAGE) {
+      this.initTriggers();
+    }
+    const middle = (this.spanButtons / 2) | 0;
+    if (this.page > this.spanButtons) {
+      this.fillArray(this.page - middle, this.page + middle);
+    }
+  }
 
   private initTriggers() {
     if (this.totalPages <= this.spanButtons) {
@@ -60,8 +87,8 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
     this.leftPage = from;
     this.rightPage = to;
     if (from > 1) {
-      this.triggers.push('first');
-      this.triggers.push('prev');
+      this.triggers.push('<<');
+      this.triggers.push('<');
     }
     if (from <= 1) {
       from = 1;
@@ -73,8 +100,8 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
       this.triggers.push(i);
     }
     if (to < this.totalPages) {
-      this.triggers.push('next');
-      this.triggers.push('last');
+      this.triggers.push('>');
+      this.triggers.push('>>');
     }
   }
 
@@ -82,19 +109,19 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
     if (!isNaN(trigger)) {
       this.page$.next(trigger);
     } else {
-      if (trigger === 'next') {
+      if (trigger === '>') {
         this.page$.next(this.page + 1);
         if (this.page + 1 > this.rightPage) {
           this.fillArray(this.page + 1, this.page + this.spanButtons + 1);
         }
-      } else if (trigger === 'prev') {
+      } else if (trigger === '<') {
         this.page$.next(this.page - 1);
         if (this.page - 1 < this.leftPage) {
           this.fillArray(this.page - this.spanButtons - 1, this.page - 1);
         }
-      } else if (trigger === 'first') {
+      } else if (trigger === '<<') {
         this.goFirst();
-      } else if (trigger === 'last') {
+      } else if (trigger === '>>') {
         this.goLast();
       }
     }

@@ -1,7 +1,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CategoryTreeService } from './category-tree.service';
 import { Injectable } from '@angular/core';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { map, catchError, switchMap, exhaustMap } from 'rxjs/operators';
 import { CategoryTreeActionTypes, CategoryTreeLoadCompleteAction, CategoryTreeErrorAction } from './category-tree.actions';
 import { ICategoryTreeModel } from './category-tree.model';
 import { of } from 'rxjs';
@@ -20,7 +20,7 @@ export class CategoryTreeEffects {
   loadCategories$ = this.actions$
     .pipe(
       ofType(CategoryTreeActionTypes.Load),
-      switchMap(() => this._srv.getAll()),
+      exhaustMap(() => this._srv.getAll()),
       map((resp: IResponse<ICategoryTreeModel[]>) => {
         if (resp.success) {
           return new CategoryTreeLoadCompleteAction(resp.data);

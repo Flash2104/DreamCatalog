@@ -16,11 +16,16 @@ namespace Web.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(
+            IProductRepository productRepository,
+            ICategoryRepository categoryRepository,
+            IMapper mapper)
         {
             this._productRepository = productRepository;
+            this._categoryRepository = categoryRepository;
             this._mapper = mapper;
         }
 
@@ -33,7 +38,7 @@ namespace Web.Services
         {
             var queriable = _productRepository.QueryAll();
             var categoryTreeIds = GetChildBranches(query.CategoryId);
-            var total = _productRepository.QueryByCondition(x => x.CategoryId == query.CategoryId).Count();
+            var total = _productRepository.Count(p => categoryTreeIds.Contains(p.CategoryId) || p.CategoryId == query.CategoryId);
             if (query.Sort != null && !string.IsNullOrEmpty(query.Sort.Column))
             {
                 if (query.Sort.IsAsc)
@@ -45,7 +50,8 @@ namespace Web.Services
                     queriable = queriable.OrderBy(query.Sort.Column + " descending");
                 }
             }
-            var list = queriable.Skip(query.Skip).Take(query.Take).Select(e => _mapper.Map<ProductDto>(e)).ToList();
+            var list = queriable.Where(p => categoryTreeIds.Contains(p.CategoryId) || p.CategoryId == query.CategoryId)
+                .Skip(query.Skip).Take(query.Take).Select(e => _mapper.Map<ProductDto>(e)).ToList();
 
             return new ResponseDto<ProductListDto>(true, new ProductListDto()
             {
@@ -56,7 +62,37 @@ namespace Web.Services
 
         private List<int> GetChildBranches(int categoryId)
         {
-            
+            var categories = this._categoryRepository.QueryAll().Select(c => new { c.Id, c.ParentId });
+            var tree = new Dictionary<int, List<int>>();
+            foreach (var category in categories)
+            {
+                List<int> parentChildren, elChildren;
+                if (!tree.TryGetValue(category.ParentId, out parentChildren))
+                {
+                    tree[category.ParentId] = parentChildren = new List<int>();
+                }
+                parentChildren.Add(category.Id);
+                if (!tree.TryGetValue(category.Id, out elChildren))
+                {
+                    tree[category.Id] = elChildren = new List<int>();
+                }
+                parentChildren.AddRange(elChildren);
+            }
+            foreach (var kvp in tree)
+            {
+                CollectChildren(tree, kvp.Value, kvp.Key);
+            }
+            var result = tree[categoryId].Distinct().ToList();
+            return result;
+        }
+
+        private void CollectChildren(Dictionary<int, List<int>> tree, List<int> parents, int current)
+        {
+            foreach (var p in parents.Distinct().ToList())
+            {
+                tree[current].AddRange(tree[p]);
+                CollectChildren(tree, tree[p], p);
+            }
         }
 
         //// https://stackoverflow.com/questions/307512/how-do-i-apply-orderby-on-an-iqueryable-using-a-string-column-name-within-a-gene
