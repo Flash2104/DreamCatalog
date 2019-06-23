@@ -21,7 +21,7 @@ export function productListReducer(state: IProductListStateModel = initialState,
     case ProductListActionTypes.GetVolumeComplete: {
       const actionComplete = action as ProductListGetVolumeCompleteAction;
       model.isLoading = false;
-      model.volume = actionComplete.payload;
+      // model.volume = actionComplete.payload;
       return model;
     }
     case ProductListActionTypes.Load: {

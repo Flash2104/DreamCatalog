@@ -15,12 +15,12 @@ export class PaginatorComponent extends BaseDestroyComponent implements OnInit {
 
   @Input() spanButtons: number = 1;
   @Input() totalElements: number = 1;
-  @Input() totalPages: number = 1;
   @Input() volume: number = 10;
   @Output() page$: EventEmitter<number> = new EventEmitter(true);
 
   page: number = 1;
   count: number;
+  totalPages: number = 1;
   triggers: any[] = [];
   leftPage: number = 1;
   rightPage: number;

@@ -6,5 +6,11 @@ export interface IResponse<Dto> {
   data: Dto
 }
 
+export interface IBaseStateModel {
+  notifications: string[];
+  errors: {
+    messages: string[]
+  }
+}
 
 export const HTTP_HEADERS = new HttpHeaders({ 'Content-Type': 'application/json' });

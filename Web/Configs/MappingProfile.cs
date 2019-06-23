@@ -12,6 +12,9 @@ namespace Web.Configs
             //Product mapping
             CreateMap<DbProduct, ProductDto>();
             CreateMap<ProductDto, DbProduct>();
+            // for list
+            CreateMap<DbProduct, ProductViewDto>();
+            CreateMap<ProductViewDto, DbProduct>();
 
             //Product update mapping
             CreateMap<DbProduct, ProductUpdateRequestDto>();

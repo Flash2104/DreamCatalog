@@ -1,14 +1,11 @@
-export interface IProductStateModel {
+import { IBaseStateModel } from '../models';
+
+export interface IProductStateModel extends IBaseStateModel {
   isLoading: boolean;
   isChanged: boolean;
 
   product: IProductModel;
   changed: IProductModel;
-
-  notifications: string[];
-  errors: {
-    messages: string[]
-  }
 }
 
 export interface IProductValidateError {

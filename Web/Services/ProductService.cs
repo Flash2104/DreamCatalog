@@ -32,17 +32,12 @@ namespace Web.Services
             this._mapper = mapper;
         }
 
-        //public ResponseDto<List<ProductDto>> ListAll(int categoryId)
-        //{
-        //    var result = _productRepository.ListAll();
-        //}
-
         public ResponseDto<ProductListDto> QueryList(ProductListQueryDto query)
         {
             var queriable = _productRepository.QueryAll();
             var categoryTreeIds = GetChildBranches(query.CategoryId);
             var total = _productRepository.Count(p => categoryTreeIds.Contains(p.CategoryId) || p.CategoryId == query.CategoryId);
-            if (query.Sort != null && !string.IsNullOrEmpty(query.Sort.Column))
+            if (!string.IsNullOrEmpty(query.Sort?.Column))
             {
                 if (query.Sort.IsAsc)
                 {
@@ -54,7 +49,7 @@ namespace Web.Services
                 }
             }
             var list = queriable.Where(p => categoryTreeIds.Contains(p.CategoryId) || p.CategoryId == query.CategoryId)
-                .Skip(query.Skip).Take(query.Take).Select(e => _mapper.Map<ProductDto>(e)).ToList();
+                .Skip(query.Skip).Take(query.Take).Select(e => _mapper.Map<ProductViewDto>(e)).ToList();
 
             return new ResponseDto<ProductListDto>(true, new ProductListDto()
             {
@@ -69,13 +64,12 @@ namespace Web.Services
             var tree = new Dictionary<int, List<int>>();
             foreach (var category in categories)
             {
-                List<int> parentChildren, elChildren;
-                if (!tree.TryGetValue(category.ParentId, out parentChildren))
+                if (!tree.TryGetValue(category.ParentId, out var parentChildren))
                 {
                     tree[category.ParentId] = parentChildren = new List<int>();
                 }
                 parentChildren.Add(category.Id);
-                if (!tree.TryGetValue(category.Id, out elChildren))
+                if (!tree.TryGetValue(category.Id, out var elChildren))
                 {
                     tree[category.Id] = elChildren = new List<int>();
                 }

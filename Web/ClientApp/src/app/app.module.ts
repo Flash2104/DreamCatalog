@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
 import { CatalogComponent } from './components/catalog/catalog.component';
-import { EditorComponent } from './components/editor/editor.component';
 import { CdkTreeModule } from '@angular/cdk/tree';
 import { MatTreeModule } from '@angular/material/tree';
 import {
@@ -54,7 +53,6 @@ import { ErrorComponent } from './components/common/errors/error.component';
     NavMenuComponent,
     HomeComponent,
     CatalogComponent,
-    EditorComponent,
     ProductListComponent,
     ProductViewComponent,
     LoadingComponent,
@@ -111,8 +109,7 @@ import { ErrorComponent } from './components/common/errors/error.component';
             ]
           }
         ]
-      },
-      { path: 'editor', component: EditorComponent }
+      }
     ])
   ],
   providers: [],

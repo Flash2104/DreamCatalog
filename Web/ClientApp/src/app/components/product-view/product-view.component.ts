@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BaseDestroyComponent } from '../BaseDestroyComponent';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction, ProductCreateAction, ProductUpdateAction } from 'src/app/store/product/product.actions';
@@ -18,7 +18,7 @@ import { NotificationComponent } from '../common/notifications/notification.comp
   styleUrls: ['./product-view.component.css']
 })
 export class ProductViewComponent extends BaseDestroyComponent implements OnInit {
-
+  default = require('src/assets/default.jpg');
   requiredMessage: string = "Поле не должно быть пустым";
 
   productId?: number;
@@ -69,7 +69,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
     this.titleFormControl = new FormControl('', [Validators.required, Validators.maxLength(50)]);
     this.priceFormControl = new FormControl(null, [Validators.required, this.validateNumber]);
     this.quantityFormControl = new FormControl(null, [Validators.required, this.validateNumber, this.validateInteger]);
-    this.imageFormControl = new FormControl();
+    this.imageFormControl = new FormControl(null);
 
     this.productForm = new FormGroup({
       title: this.titleFormControl,
@@ -82,13 +82,17 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
       this._store.dispatch(new ProductAddChangeAction(product));
     })
 
+    this.imageFormControl.valueChanges.pipe(this.takeUntilDestroyed()).subscribe((im) => {
+      console.log('image', im);
+    })
+
     this.store$
       .pipe(
         this.takeUntilDestroyed(),
         filter(st => st.changed !== null)
       ).subscribe(st => {
         this.isChanged = st.isChanged;
-        const patchedValue = { ...st.changed, imageId: this.imageFormControl.value };
+        const patchedValue = { ...st.changed, image: this.imageFormControl.value };
         this.productForm.patchValue(patchedValue, { emitEvent: false });
         if(!!st.notifications && st.notifications.length > 0) {
             this._snackBar.openFromComponent(NotificationComponent,{ verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: {message: st.notifications.pop()}})

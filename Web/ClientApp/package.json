@@ -40,9 +40,9 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.800.2",
-    "@types/node": "^10.12.0",
-    "@types/webpack-env": "^1.13.6",
     "@ngrx/store-devtools": "^8.0.0",
+    "@types/node": "^10.14.10",
+    "@types/webpack-env": "^1.13.6",
     "angular2-template-loader": "^0.6.2",
     "aspnet-prerendering": "^3.0.1",
     "aspnet-webpack": "^3.0.0",

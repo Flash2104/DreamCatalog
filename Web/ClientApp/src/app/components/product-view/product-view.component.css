@@ -5,3 +5,60 @@
 .mat-form-field .mat-form-field-subscript-wrapper {
     margin: 0;
 }
+
+.img-preview {
+  max-width: 96px;
+  max-height: 96px;
+}
+
+/* .custom-file-input ~ .custom-file-label::after {
+  content: "Button Text";
+} */
+
+html {
+  font-family: sans-serif;
+}
+
+form {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+form ol {
+  padding-left: 0;
+}
+
+form div > p {
+  background: #eee;
+  display: flex;
+  margin-bottom: 10px;
+  list-style-type: none;
+}
+
+form img {
+  height: 64px;
+  order: 1;
+}
+
+form p {
+  line-height: 32px;
+  padding-left: 10px;
+}
+
+form label, form button {
+  background-color: #7F9CCB;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  height: auto;
+}
+
+form label:hover, form button:hover {
+  background-color: #2D5BA3;
+  color: white;
+}
+
+form label:active, form button:active {
+  background-color: #0D3F8F;
+  color: white;
+}

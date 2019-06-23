@@ -22,43 +22,127 @@
           class="fa fa-ban"></i> Отменить</button>
     </div>
     <hr />
-    <form class="form-group" [formGroup]="productForm">
-      <mat-form-field appearance="outline">
-        <mat-label>Фото</mat-label>
-        <img *ngIf="!!imageBase64" src="data:image/png;base64, {{imageBase64}}">
-        <img *ngIf="!imageBase64" src="default.jpg">
-        <input matInput class="ng-hide" id="input-file-id" type="text" formControlName="image"/>
-        <label for="input-file-id" class="md-button md-raised md-primary"></label>
-        <small *ngIf="titleFormControl.errors && titleFormControl.errors.required"
-          class="form-text text-muted">{{requiredMessage}}</small>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Название</mat-label>
-        <input matInput type="text" formControlName="title">
-        <small *ngIf="titleFormControl.errors && titleFormControl.errors.required"
-          class="form-text text-muted">{{requiredMessage}}</small>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Цена</mat-label>
-        <input matInput type="text" formControlName="price">
-        <small *ngIf="priceFormControl.errors && priceFormControl.errors.required"
-          class="form-text text-muted">{{requiredMessage}}</small>
-        <small *ngIf="priceFormControl.errors && priceFormControl.errors.numberKey" class="form-text text-muted">Упс, не
-          число!</small>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Количество</mat-label>
-        <input matInput type="text" placeholder="Количество" formControlName="quantity">
-        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.required"
-          class="form-text text-muted">{{requiredMessage}}</small>
-        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.numberKey"
-          class="form-text text-muted">Упс, не число!</small>
-        <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.integer"
-          class="form-text text-muted">Количество должно быть целочисленным!</small>
-      </mat-form-field>
+    <form class="border" [formGroup]="productForm">
+      <!-- <div class="form-group">
+        <label for="input-image-id" class="md-button md-raised md-primary">Фото</label>
+        <div class="img-preview d-flex justify-content-center">
+          <img *ngIf="!!imageBase64" src="data:image/png;base64, {{imageBase64}}">
+          <img *ngIf="!imageBase64" src="~/images/default.jpg">
+        </div>
+        <input class="form-control-file" type="file" class="btn btn-outline-secondary" id="input-image-id" formControlName="image" />
+      </div> -->
+
+      <div class="justify-content-center">
+        <label class="" for="image_uploads">Фото </label>
+        <div class="img-preview justify-content-center">
+            <img *ngIf="!!imageBase64" src="data:image/png;base64, {{imageBase64}}">
+            <img *ngIf="!imageBase64" [src]="default">
+          </div>
+        <input type="file" id="image_uploads" hidden accept=".jpg, .jpeg, .png" formControlName="image">
+
+      </div>
+
+      <div class="form-group">
+        <label for="title-control">Название</label>
+        <input id="title-control" class="form-control" type="text" formControlName="title">
+        <div class="form-text text-danger">
+          <!-- errors -->
+          <small *ngIf="titleFormControl.errors && titleFormControl.errors.required">{{requiredMessage}}</small>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="price-control">Цена</label>
+        <input id="price-control" class="form-control" type="number" formControlName="price">
+        <div class="form-text text-muted">
+          <!-- errors -->
+          <small *ngIf="priceFormControl.errors && priceFormControl.errors.required">{{requiredMessage}}</small>
+          <small *ngIf="priceFormControl.errors && priceFormControl.errors.numberKey">Упс, не число!</small>
+        </div>
+
+      </div>
+      <div class="form-group">
+        <label for="quantity-control">Количество</label>
+        <input id="quantity-control" class="form-control" type="number" placeholder="Количество"
+          formControlName="quantity">
+        <div class="form-text text-danger">
+          <!-- errors -->
+          <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.required">{{requiredMessage}}</small>
+          <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.numberKey">Упс, не число!</small>
+          <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.integer">Количество должно быть
+            целочисленным!</small>
+        </div>
+      </div>
     </form>
   </div>
 </div>
 <ng-template #loading>
   <app-loading> </app-loading>
 </ng-template>
+<script>
+  var input = document.querySelector('input');
+  var preview = document.querySelector('.preview');
+
+  input.style.opacity = "0";
+  input.addEventListener('change', updateImageDisplay);
+
+  function updateImageDisplay() {
+    while (preview.firstChild) {
+      preview.removeChild(preview.firstChild);
+    }
+
+    var curFiles = input.files;
+    if (curFiles.length === 0) {
+      var para = document.createElement('p');
+      para.textContent = 'No files currently selected for upload';
+      preview.appendChild(para);
+    } else {
+      var list = document.createElement('ol');
+      preview.appendChild(list);
+      for (var i = 0; i < curFiles.length; i++) {
+        var listItem = document.createElement('li');
+        var para = document.createElement('p');
+        if (validFileType(curFiles[i])) {
+          para.textContent = 'File name ' + curFiles[i].name + ', file size ' + returnFileSize(curFiles[i].size) + '.';
+          var image = document.createElement('img');
+          image.src = window.URL.createObjectURL(curFiles[i]);
+
+          listItem.appendChild(image);
+          listItem.appendChild(para);
+
+        } else {
+          para.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
+          listItem.appendChild(para);
+        }
+
+        list.appendChild(listItem);
+      }
+    }
+  }
+
+  const fileTypes = [
+    'image/jpeg',
+    'image/pjpeg',
+    'image/png'
+  ]
+
+  function validFileType(file) {
+    for (var i = 0; i < fileTypes.length; i++) {
+      if (file.type === fileTypes[i]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function returnFileSize(number) {
+    if (number < 1024) {
+      return number + 'bytes';
+    } else if (number > 1024 && number < 1048576) {
+      return (number / 1024).toFixed(1) + 'KB';
+    } else if (number > 1048576) {
+      return (number / 1048576).toFixed(1) + 'MB';
+    }
+  }
+
+</script>

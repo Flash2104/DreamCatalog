@@ -6,10 +6,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { Store } from '@ngrx/store';
-import { ProductListGetVolumeAction, ProductListLoadAction } from 'src/app/store/product-list/product-list.actions';
+import { ProductListLoadAction } from 'src/app/store/product-list/product-list.actions';
 import { filter } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PaginatorComponent } from '../common/paginator/paginator.component';
+import { NotificationComponent } from '../common/notifications/notification.component';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-product-list',
@@ -19,13 +21,12 @@ import { PaginatorComponent } from '../common/paginator/paginator.component';
 export class ProductListComponent extends BaseDestroyComponent implements OnInit {
 
   page: number = 1;
-  volume: number = 10;
+  volume: number = 5;
   categoryId: number;
   totalElements: number;
-  totalPages: number;
   sortColumn: string;
   sortDirection: string;
-  displayedColumns: string[] = ['select', 'id', 'title', 'price', 'quantity'];
+  displayedColumns: string[] = ['select', 'image', 'title', 'price', 'quantity'];
   dataSource: MatTableDataSource<IProductViewModel>;
   selection = new SelectionModel<IProductViewModel>(true, []);
   store$ = this._store.select(s => s.productListModuleStore);
@@ -35,7 +36,9 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
 
   constructor(
     private _store: Store<IAppStore>,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private _snackBar: MatSnackBar
+  ) {
     super();
   }
 
@@ -50,22 +53,20 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
         this.categoryId = +pm.get('categoryId');
+        this.page = 1;
         this.loadList();
       });
 
     this.store$
       .pipe(this.takeUntilDestroyed(),
         filter(st => !!st && !!st.listData))
-      .subscribe(p => {
-        this.totalElements = p.totalElements;
-        this.initTotalPages();
-        this.dataSource = new MatTableDataSource(p.listData);
+      .subscribe(st => {
+        this.totalElements = st.totalElements;
+        this.dataSource = new MatTableDataSource(st.listData);
+        if (!!st.notifications && st.notifications.length > 0) {
+          this._snackBar.openFromComponent(NotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.notifications.pop() } })
+        }
       });
-  }
-
-  private initTotalPages() {
-      const isRemainder = this.totalElements % this.volume != 0;
-      this.totalPages = isRemainder ? this.totalElements / this.volume | 0 + 1 : (this.totalElements / this.volume) | 0;
   }
 
   onPageChange($event: any): void {
@@ -86,7 +87,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   isAllSelected() {
-    if(!this.dataSource || !this.dataSource.data) {
+    if (!this.dataSource || !this.dataSource.data) {
       return false;
     }
     const numSelected = this.selection.selected.length;
@@ -95,7 +96,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   masterToggle() {
-    if(!this.dataSource || !this.dataSource.data) {
+    if (!this.dataSource || !this.dataSource.data) {
       return;
     }
     this.isAllSelected() ?

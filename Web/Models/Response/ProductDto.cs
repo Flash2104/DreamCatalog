@@ -1,7 +1,16 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Web.Models.Response
 {
-    public class ProductDto : BaseEntityDto
+    public class ProductListDto
+    {
+        public List<ProductViewDto> List { get; set; }
+
+        public int TotalElements { get; set; }
+    }
+
+    public class BaseProductDto : BaseEntityDto
     {
         public string Title { get; set; }
 
@@ -10,7 +19,15 @@ namespace Web.Models.Response
         public int Quantity { get; set; }
 
         public int CategoryId { get; set; }
-        
-        public virtual ImageDto Image { get; set; }
+    }
+
+    public class ProductDto : BaseProductDto
+    {
+        public ImageDto Image { get; set; }
+    }
+
+    public class ProductViewDto : BaseProductDto
+    {
+        public int ImageId { get; set; }
     }
 }

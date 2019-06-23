@@ -1,14 +1,11 @@
-export interface IProductListStateModel {
+import { IBaseStateModel } from '../models';
+
+export interface IProductListStateModel extends IBaseStateModel {
   isLoading: boolean;
 
   totalElements: number;
   currentPage: number;
   listData: IProductViewModel[];
-  volume: number;
-
-  errors: {
-    messages: string[]
-  }
 }
 
 export interface IProductListResponseModel {
@@ -57,8 +54,8 @@ export const initialState: IProductListStateModel = {
   isLoading: false,
   listData: null,
   totalElements: null,
-  volume: 10,
   currentPage: 1,
+  notifications: [],
   errors: {
     messages: []
   }
