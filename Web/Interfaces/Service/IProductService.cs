@@ -7,14 +7,14 @@ namespace Web.Interfaces.Services
 {
     public interface IProductService
     {
-        ResponseDto<ProductListDto> QueryList(ProductListQueryDto query);
+        BaseResponse<ProductListDto> QueryList(ProductListQueryDto query);
 
-        Task<ResponseDto<ProductDto>> GetProduct(int id);
+        Task<BaseResponse<ProductDto>> GetProduct(int id);
 
-        Task<ResponseDto<ProductDto>> CreateProduct(ProductUpdateRequestDto model);
+        Task<BaseResponse<ProductDto>> CreateProduct(ProductUpdateRequestDto model);
 
-        Task<ResponseDto<ProductDto>> UpdateProduct(ProductUpdateRequestDto model);
+        Task<BaseResponse<ProductDto>> UpdateProduct(ProductUpdateRequestDto model);
 
-        Task<ResponseDto<int>> DeleteProducts(int[] ids);
+        Task<BaseResponse<int>> DeleteProducts(int[] ids);
     }
 }

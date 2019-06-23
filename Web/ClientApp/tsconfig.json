@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "types": [
+      "node"
+    ],
     "importHelpers": true,
     "target": "es5",
     "module": "es2015",

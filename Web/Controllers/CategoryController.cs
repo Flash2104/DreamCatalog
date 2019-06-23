@@ -19,14 +19,14 @@ namespace Web.Controllers
         }
 
         [HttpGet("get-tree")]
-        public async Task<ResponseDto<List<CategoryTreeDto>>> ListAllCategories()
+        public async Task<BaseResponse<List<CategoryTreeDto>>> ListAllCategories()
         {
             await Task.Delay(1000);
             return await _categoryService.ListAllCategories();
         }
 
         [HttpGet("get")]
-        public async Task<ResponseDto<CategoryDto>> GetCategory(int id)
+        public async Task<BaseResponse<CategoryDto>> GetCategory(int id)
         {
             await Task.Delay(1000);
             return await _categoryService.GetCategory(id);

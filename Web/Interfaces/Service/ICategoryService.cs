@@ -6,8 +6,8 @@ namespace Web.Interfaces.Services
 {
     public interface ICategoryService
     {
-        Task<ResponseDto<List<CategoryTreeDto>>> ListAllCategories();
+        Task<BaseResponse<List<CategoryTreeDto>>> ListAllCategories();
 
-        Task<ResponseDto<CategoryDto>> GetCategory(int id);
+        Task<BaseResponse<CategoryDto>> GetCategory(int id);
     }
 }

@@ -80,6 +80,11 @@ export class ProductsDeleteAction implements Action {
 
 export class ProductsDeleteCompleteAction implements Action {
   type = ProductListActionTypes.DeleteComplete;
+  payload: number;
+
+  constructor(payload: number) {
+    this.payload = payload;
+  }
 }
 
 

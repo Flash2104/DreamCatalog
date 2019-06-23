@@ -32,7 +32,7 @@ namespace Web.Repositories
         public virtual async Task<T> Add(T entity)
         {
             _appDbContext.Set<T>().Add(entity);
-            entity.Id = await _appDbContext.SaveChangesAsync();
+            await _appDbContext.SaveChangesAsync();
             return entity;
         }
 

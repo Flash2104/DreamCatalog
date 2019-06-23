@@ -4,7 +4,8 @@ import { Observable, of } from 'rxjs';
 import { PRODUCT_LIST, PRODUCT_LIST_URL } from '../product-list/product-list.service';
 import { IResponse, HTTP_HEADERS } from '../models';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { prepareBase64Data } from 'src/app/services/helper';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -30,7 +31,9 @@ export class ProductService {
   }
 
   create(request: IProductCreateRequestModel): Observable<IResponse<IProductModel>> {
-    // return this.createMock(request);
+    if(!!request.image && !!request.image.base64String){
+      request.image.base64String = prepareBase64Data(request.image.base64String as string);
+    }
     const res$ = this._http.post<IResponse<IProductModel>>(`${PRODUCT_LIST_URL}/create`, request, { headers: HTTP_HEADERS });
     return res$.pipe(
       catchError(error => {
@@ -49,7 +52,9 @@ export class ProductService {
   // }
 
   update(request: IProductUpdateRequestModel): Observable<IResponse<IProductModel>> {
-    // return this.updateMock(request);
+    if(!!request.image && !!request.image.base64String){
+      request.image.base64String = prepareBase64Data(request.image.base64String as string);
+    }
     const res$ = this._http.put<IResponse<IProductModel>>(`${PRODUCT_LIST_URL}/update`, request, { headers: HTTP_HEADERS });
     return res$.pipe(
       catchError(error => {

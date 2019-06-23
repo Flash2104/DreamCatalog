@@ -25,7 +25,7 @@ export interface IProductModel {
 export interface IImageModel {
   id: number;
   title: string;
-  buffer: []
+  base64String: string
 }
 
 export interface IProductDetailOptions {

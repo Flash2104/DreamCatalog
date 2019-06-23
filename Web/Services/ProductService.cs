@@ -7,7 +7,6 @@ using Web.Interfaces.Services;
 using Web.Models.Response;
 using Web.Models.Request;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
 using System;
 using System.Linq;
 
@@ -32,7 +31,7 @@ namespace Web.Services
             this._mapper = mapper;
         }
 
-        public ResponseDto<ProductListDto> QueryList(ProductListQueryDto query)
+        public BaseResponse<ProductListDto> QueryList(ProductListQueryDto query)
         {
             var queriable = _productRepository.QueryAll();
             var categoryTreeIds = GetChildBranches(query.CategoryId);
@@ -51,7 +50,7 @@ namespace Web.Services
             var list = queriable.Where(p => categoryTreeIds.Contains(p.CategoryId) || p.CategoryId == query.CategoryId)
                 .Skip(query.Skip).Take(query.Take).Select(e => _mapper.Map<ProductViewDto>(e)).ToList();
 
-            return new ResponseDto<ProductListDto>(true, new ProductListDto()
+            return new SuccessResponse<ProductListDto>(new ProductListDto()
             {
                 List = list,
                 TotalElements = total
@@ -64,14 +63,18 @@ namespace Web.Services
             var tree = new Dictionary<int, List<int>>();
             foreach (var category in categories)
             {
+                if (!category.Id.HasValue)
+                {
+                    continue;
+                }
                 if (!tree.TryGetValue(category.ParentId, out var parentChildren))
                 {
                     tree[category.ParentId] = parentChildren = new List<int>();
                 }
-                parentChildren.Add(category.Id);
-                if (!tree.TryGetValue(category.Id, out var elChildren))
+                parentChildren.Add(category.Id.Value);
+                if (!tree.TryGetValue(category.Id.Value, out var elChildren))
                 {
-                    tree[category.Id] = elChildren = new List<int>();
+                    tree[category.Id.Value] = elChildren = new List<int>();
                 }
                 parentChildren.AddRange(elChildren);
             }
@@ -103,59 +106,88 @@ namespace Web.Services
         //    MethodCallExpression resultExp = Expression.Call(typeof(Queryable), method, new Type[] { type, property.PropertyType }, source.Expression, Expression.Quote(orderByExp));
         //    return source.Provider.CreateQuery<T>(resultExp);
         //}   
-        
-        public async Task<ResponseDto<ProductDto>> GetProduct(int id)
+
+        public async Task<BaseResponse<ProductDto>> GetProduct(int id)
         {
             var dbModel = await _productRepository.GetById(id);
             if (dbModel == null)
             {
-                return new ResponseDto<ProductDto>(false, null);
+                return new FailureResponse<ProductDto>(new[] { "Продукт не найден" });
             }
             var model = _mapper.Map<ProductDto>(dbModel);
             if (dbModel.ImageId.HasValue)
             {
                 var image = await _imageRepository.GetById(dbModel.ImageId.Value);
                 model.Image = _mapper.Map<ImageDto>(image);
+                model.Image.Base64String = Convert.ToBase64String(image.Buffer);
             }
-            return new ResponseDto<ProductDto>(true, model);
+            return new SuccessResponse<ProductDto>(model);
         }
 
-        public async Task<ResponseDto<ProductDto>> CreateProduct(ProductUpdateRequestDto model)
+        public async Task<BaseResponse<ProductDto>> CreateProduct(ProductUpdateRequestDto model)
         {
             var create = _mapper.Map<DbProduct>(model);
-            var created = await _productRepository.Add(create);
-            if (created == null)
+            try
             {
-                return new ResponseDto<ProductDto>(false, null);
+                await PrepareImage(model, create);
+                var created = await _productRepository.Add(create);
+                return new SuccessResponse<ProductDto>(_mapper.Map<ProductDto>(created));
             }
-            return new ResponseDto<ProductDto>(true, _mapper.Map<ProductDto>(created));
+            catch (Exception ex)
+            {
+                return new FailureResponse<ProductDto>(new[] { "Ошибка при создании продукта", ex.Message });
+            }
         }
 
-        public async Task<ResponseDto<ProductDto>> UpdateProduct(ProductUpdateRequestDto model)
+        private async Task PrepareImage(ProductUpdateRequestDto model, DbProduct create)
+        {
+            if (model.Image != null && model.Image.Id == null)
+            {
+                var dbModel = _mapper.Map<DbImage>(model.Image);
+                dbModel.Buffer = Convert.FromBase64String(model.Image.Base64String);
+                var dbImage = await _imageRepository.Add(dbModel);
+                create.ImageId = dbImage.Id;
+            }
+        }
+
+        public async Task<BaseResponse<ProductDto>> UpdateProduct(ProductUpdateRequestDto model)
         {
             var update = _mapper.Map<DbProduct>(model);
-            var updated = await _productRepository.Update(update);
-            if (updated == null)
+            try
             {
-                return new ResponseDto<ProductDto>(false, null);
+                await PrepareImage(model, update);
+                var updated = await _productRepository.Update(update);
+                return new SuccessResponse<ProductDto>(_mapper.Map<ProductDto>(updated));
             }
-            return new ResponseDto<ProductDto>(true, _mapper.Map<ProductDto>(updated));
+            catch (Exception ex)
+            {
+                return new FailureResponse<ProductDto>(new[] { "Ошибка при обновлении продукта", ex.Message });
+            }
         }
 
-        public async Task<ResponseDto<int>> DeleteProducts(int[] ids)
+        public async Task<BaseResponse<int>> DeleteProducts(int[] ids)
         {
-            var entities = new List<DbProduct>();
-            foreach (var id in ids)
+            try
             {
-                entities.Add(await _productRepository.GetById(id));
+                var entities = new List<DbProduct>();
+                foreach (var id in ids)
+                {
+                    entities.Add(await _productRepository.GetById(id));
+                }
+                var t = _productRepository.DeleteRange(entities);
+                if (t.IsFaulted)
+                {
+                    return new FailureResponse<int>(new[] { "Ошибка при удалении продуктов", t.Exception?.Message });
+                }
+                await t;
+                return new SuccessResponse<int>(ids.Length);
             }
-            var t = _productRepository.DeleteRange(entities);
-            if (t.IsFaulted)
+            catch (Exception ex)
             {
-                return new ResponseDto<int>(false, 0);
+                return new FailureResponse<int>(new[] { "Ошибка при удалении продуктов", ex.Message });
+
             }
-            await t;
-            return new ResponseDto<int>(true, ids.Length);
+
         }
     }
 }

@@ -19,13 +19,17 @@ namespace Web.Services
 
         }
 
-        public async Task<ResponseDto<List<CategoryTreeDto>>> ListAllCategories()
+        public async Task<BaseResponse<List<CategoryTreeDto>>> ListAllCategories()
         {
             var allCategories = await _categoryReposytory.ListAll();
             var resultList = new List<CategoryTreeDto>();
             var tree = new Dictionary<int, List<CategoryTreeDto>>();
             foreach (var category in allCategories)
             {
+                if (!category.Id.HasValue)
+                {
+                    continue;
+                }
                 List<CategoryTreeDto> childList;
                 var model = _mapper.Map<CategoryTreeDto>(category);
 
@@ -34,27 +38,27 @@ namespace Web.Services
                     tree[category.ParentId] = childList = new List<CategoryTreeDto>();
                 }
                 childList.Add(model);
-                if (!tree.TryGetValue(category.Id, out childList))
+                if (!tree.TryGetValue(category.Id.Value, out childList))
                 {
-                    tree[category.Id] = childList = new List<CategoryTreeDto>();
+                    tree[category.Id.Value] = childList = new List<CategoryTreeDto>();
                 }
                 model.Children = childList;
             }
             if (!tree.TryGetValue(0, out resultList))
             {
-                return new ResponseDto<List<CategoryTreeDto>>(false, resultList);
+                return new FailureResponse<List<CategoryTreeDto>>(new []{"Корневых категорий не найдено"});
             }
-            return new ResponseDto<List<CategoryTreeDto>>(true, resultList);
+            return new SuccessResponse<List<CategoryTreeDto>>(resultList);
         }
 
-        public async Task<ResponseDto<CategoryDto>> GetCategory(int id)
+        public async Task<BaseResponse<CategoryDto>> GetCategory(int id)
         {
             var category = await _categoryReposytory.GetById(id);
             if(category == null)
             {
-                return new ResponseDto<CategoryDto>(false, null);
+                return new FailureResponse<CategoryDto>(new[] { $"Категории с id: {id} не найдено" });
             }
-            return new ResponseDto<CategoryDto>(true, _mapper.Map<CategoryDto>(category));
+            return new SuccessResponse<CategoryDto>(_mapper.Map<CategoryDto>(category));
         }
     }
 }

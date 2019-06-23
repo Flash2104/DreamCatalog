@@ -31,8 +31,8 @@ export class ProductListService {
     );
   }
 
-  delete(request: number[]): Observable<IResponse<any>> {
-    const res$ = this._http.request<IResponse<any>>('DELETE', `${PRODUCT_LIST_URL}/delete`, {
+  delete(request: number[]): Observable<IResponse<number>> {
+    const res$ = this._http.request<IResponse<number>>('DELETE', `${PRODUCT_LIST_URL}/delete-products`, {
       headers: HTTP_HEADERS,
       body: request
     })

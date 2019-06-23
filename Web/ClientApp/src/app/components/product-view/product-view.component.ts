@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BaseDestroyComponent } from '../BaseDestroyComponent';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -8,9 +8,12 @@ import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCa
 import { filter } from 'rxjs/operators';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { CloseDialogComponent } from '../common/close-dialog/close-dialog.component';
-import { IProductValidateError, IProductUpdateRequestModel } from 'src/app/store/product/product.model';
+import { IProductValidateError, IProductUpdateRequestModel, IImageModel } from 'src/app/store/product/product.model';
 import { RouteService } from 'src/app/services/route.service';
 import { NotificationComponent } from '../common/notifications/notification.component';
+import { validateFileTypes, validateNumber, validateInteger } from 'src/app/services/helper';
+
+declare var require: any
 
 @Component({
   selector: 'app-product-view',
@@ -26,6 +29,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
   isChanged: boolean;
   isCreate: boolean;
   imageBase64: string;
+  imageId: number;
   errors: IProductValidateError[] = [];
 
   titleFormControl: FormControl;
@@ -42,7 +46,8 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
     private route: ActivatedRoute,
     private _store: Store<IAppStore>,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private cd: ChangeDetectorRef
   ) {
     super();
   }
@@ -67,9 +72,9 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
       });
 
     this.titleFormControl = new FormControl('', [Validators.required, Validators.maxLength(50)]);
-    this.priceFormControl = new FormControl(null, [Validators.required, this.validateNumber]);
-    this.quantityFormControl = new FormControl(null, [Validators.required, this.validateNumber, this.validateInteger]);
-    this.imageFormControl = new FormControl(null);
+    this.priceFormControl = new FormControl(null, [Validators.required, validateNumber]);
+    this.quantityFormControl = new FormControl(null, [Validators.required, validateNumber, validateInteger]);
+    this.imageFormControl = new FormControl(null, [validateFileTypes(['png', 'jpg', 'jpeg'])]);
 
     this.productForm = new FormGroup({
       title: this.titleFormControl,
@@ -92,26 +97,46 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
         filter(st => st.changed !== null)
       ).subscribe(st => {
         this.isChanged = st.isChanged;
-        const patchedValue = { ...st.changed, image: this.imageFormControl.value };
-        this.productForm.patchValue(patchedValue, { emitEvent: false });
-        if(!!st.notifications && st.notifications.length > 0) {
-            this._snackBar.openFromComponent(NotificationComponent,{ verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: {message: st.notifications.pop()}})
+        if (!!st.changed) {
+          const patchedValue = { ...st.changed };
+          this.productForm.patchValue(patchedValue, { emitEvent: false });
+          if (!!st.changed.image && !!st.changed.image.base64String) {
+            try {
+              btoa(atob(st.changed.image.base64String as string));
+              this.imageBase64 = 'data:image/jpg;base64,' + st.changed.image.base64String;
+            } catch (e) {
+              this.imageBase64 = st.changed.image.base64String;
+            }
+          } else {
+            this.imageBase64 = null;
+          }
+        }
+        if (!!st.notifications && st.notifications.length > 0) {
+          this._snackBar.openFromComponent(NotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.notifications.pop() } })
         }
       });
   }
 
-  private validateNumber(control: FormControl): { [key: string]: boolean } {
-    if (!!control.value && (isNaN(control.value))) {
-      return { 'numberKey': true };
-    }
-    return null;
-  }
+  onFileChange(event: any) {
+    const reader = new FileReader();
 
-  private validateInteger(control: FormControl): { [key: string]: boolean } {
-    if (!!control.value && (!Number.isInteger(+control.value))) {
-      return { 'integer': true };
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        this.imageBase64 = reader.result as string;
+        const model: IImageModel = {
+          id: null,
+          title: file.name,
+          base64String: reader.result as string
+        }
+        this.imageFormControl.patchValue(model, { emitEvent: true });
+
+        // need to run CD since file load runs outside of zone
+        this.cd.markForCheck();
+      };
     }
-    return null;
   }
 
   onSave() {
@@ -143,6 +168,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
 
     dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
       if (result) {
+        this.onCancelChanges();
         this._routeSrv.navigateToCategory(this.categoryId);
       }
     });

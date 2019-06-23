@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-body{
+body {
   height: 90vh;
 }
 
@@ -19,7 +19,7 @@ footer {
 }
 
 .router-link-active {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 .row-header {
@@ -28,5 +28,10 @@ footer {
 }
 
 hr {
-  margin-top: 5px; 
+  margin-top: 5px;
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: #6c757d;
 }

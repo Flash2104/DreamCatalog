@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { BaseDestroyComponent } from '../BaseDestroyComponent';
+import { Component, OnInit, Input } from "@angular/core";
+import { BaseDestroyComponent } from '../../BaseDestroyComponent';
 
 @Component({
   selector: 'app-loading',
@@ -7,7 +7,8 @@ import { BaseDestroyComponent } from '../BaseDestroyComponent';
   styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent extends BaseDestroyComponent implements OnInit {
-
+  @Input() diameter : number = 40;
+  @Input() customStyle : string = "";
   constructor() {
     super();
   }

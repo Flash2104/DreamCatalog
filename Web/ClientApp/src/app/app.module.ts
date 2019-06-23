@@ -15,15 +15,14 @@ import {
   MatSortModule,
   MatIconModule,
   MatExpansionModule,
-  MatFormFieldModule,
-  MatInputModule,
   MatCheckboxModule,
   MatSelectModule,
   MatPaginatorModule,
   MatAutocompleteModule,
   MatButtonModule,
   MatDialogModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,7 +37,7 @@ import { ProductListEffects } from './store/product-list/product-list.effects';
 import { ProductEffects } from './store/product/product.effects';
 import { CategoryTreeEffects } from './store/category-tree/category-tree.effects';
 import { CommonModule } from '@angular/common';
-import { LoadingComponent } from './components/loading/loading.component';
+import { LoadingComponent } from './components/common/loading/loading.component';
 import { CategoryComponent } from './components/category/category.component';
 import { PaginatorComponent } from './components/common/paginator/paginator.component';
 import { CdkStepperModule } from '@angular/cdk/stepper';
@@ -75,8 +74,6 @@ import { ErrorComponent } from './components/common/errors/error.component';
     MatTableModule,
     MatSortModule,
     MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
     MatPaginatorModule,
@@ -86,6 +83,7 @@ import { ErrorComponent } from './components/common/errors/error.component';
     CdkTableModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
     StoreModule.forRoot(StoreRootModule.model),
     EffectsModule.forRoot([
       CategoryEffects,

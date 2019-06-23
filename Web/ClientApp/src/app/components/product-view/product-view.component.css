@@ -6,14 +6,6 @@
     margin: 0;
 }
 
-.img-preview {
-  max-width: 96px;
-  max-height: 96px;
-}
-
-/* .custom-file-input ~ .custom-file-label::after {
-  content: "Button Text";
-} */
 
 html {
   font-family: sans-serif;
@@ -36,7 +28,9 @@ form div > p {
 }
 
 form img {
-  height: 64px;
+  max-width: 128px;
+  max-height: 128px;
+  margin-bottom: 5px; 
   order: 1;
 }
 
@@ -46,19 +40,20 @@ form p {
 }
 
 form label, form button {
-  background-color: #7F9CCB;
+  background-color: gainsboro; 
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: .25rem;
   font-size: 0.8rem;
   height: auto;
 }
 
 form label:hover, form button:hover {
-  background-color: #2D5BA3;
+  background-color: #6c757d;;
   color: white;
+  cursor: pointer;
 }
 
 form label:active, form button:active {
-  background-color: #0D3F8F;
+  background-color: #6c757d;;
   color: white;
 }

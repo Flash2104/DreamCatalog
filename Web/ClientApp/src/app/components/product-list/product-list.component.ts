@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { IAppStore } from 'src/app/store/storeRootModule';
 import { Store } from '@ngrx/store';
-import { ProductListLoadAction } from 'src/app/store/product-list/product-list.actions';
+import { ProductListLoadAction, ProductsDeleteAction } from 'src/app/store/product-list/product-list.actions';
 import { filter } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PaginatorComponent } from '../common/paginator/paginator.component';
@@ -63,6 +63,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
       .subscribe(st => {
         this.totalElements = st.totalElements;
         this.dataSource = new MatTableDataSource(st.listData);
+        this.selection.clear();
         if (!!st.notifications && st.notifications.length > 0) {
           this._snackBar.openFromComponent(NotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.notifications.pop() } })
         }
@@ -81,9 +82,7 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   delete(): void {
-    let message = 'Удалены объекты: \n';
-    this.selection.selected.forEach(s => message += s.id.toString() + ' - ' + s.title + ';\n')
-    window.alert(message);
+    this._store.dispatch(new ProductsDeleteAction(this.selection.selected.map(s => s.id)));
   }
 
   isAllSelected() {

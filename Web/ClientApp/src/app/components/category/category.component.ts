@@ -8,6 +8,7 @@ import { ProductListComponent } from '../product-list/product-list.component';
 import { CloseDialogComponent } from '../common/close-dialog/close-dialog.component';
 import { MatDialog } from '@angular/material';
 import { RouteService } from 'src/app/services/route.service';
+import { ProductCancelChangesAction } from 'src/app/store/product/product.actions';
 
 @Component({
   selector: 'app-category',
@@ -68,6 +69,7 @@ export class CategoryComponent extends BaseDestroyComponent implements OnInit {
 
     dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
       if (result) {
+        this._store.dispatch(new ProductCancelChangesAction());
         this._routeSrv.navigateToCatalog();
       }
     });
