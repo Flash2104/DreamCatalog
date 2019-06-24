@@ -38,18 +38,11 @@ export class ProductEffects extends BaseDestroyComponent {
     catchError(error => of(console.log('Ошибка createProduct effect!: ', error)))
   );
 
-  @Effect({ dispatch: false })
+  @Effect()
   createCompleteProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.CreateComplete),
     map((action: ProductCreateCompleteAction) => {
-      this._routeSrv.navigateToProduct(action.payload.categoryId, action.payload.id);
-      const page = this._state.value.productListModuleStore && this._state.value.productListModuleStore.currentPage || 1;
-      return new ProductListLoadAction(<IProductListRequestModel>{
-        categoryId: action.payload.categoryId,
-        page: page,
-        sort: null,
-        take: 5
-      });
+      return this.prepareLoadListAction(action);
     }),
     catchError(error => of(console.log('Ошибка createProduct effect!: ', error)))
   );
@@ -73,14 +66,7 @@ export class ProductEffects extends BaseDestroyComponent {
     ofType(ProductActionTypes.UpdateComplete),
     map((action: ProductUpdateCompleteAction) => {
       if (!!action.payload) {
-        const payload = action.payload;
-        const page = this._state.value.productListModuleStore && this._state.value.productListModuleStore.currentPage || 1;
-        return new ProductListLoadAction(<IProductListRequestModel>{
-          categoryId: payload.categoryId,
-          page: page,
-          sort: null,
-          take: 5
-        })
+        return this.prepareLoadListAction(action);
       }
       return new ProductInitAction();
     }),
@@ -111,4 +97,16 @@ export class ProductEffects extends BaseDestroyComponent {
     }),
     catchError(error => of(console.log('Ошибка loadProduct effect!: ', error)))
   );
+
+  private prepareLoadListAction(action: ProductUpdateCompleteAction) {
+    const payload = action.payload;
+    const page = this._state.value.productListModuleStore && this._state.value.productListModuleStore.currentPage || 1;
+    const sorting = this._state.value.productListModuleStore && this._state.value.productListModuleStore.sorting || null;
+    return new ProductListLoadAction(<IProductListRequestModel>{
+      categoryId: payload.categoryId,
+      page: page,
+      sort: sorting,
+      take: 5
+    });
+  }
 }

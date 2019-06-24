@@ -5,6 +5,7 @@ export interface IProductListStateModel extends IBaseStateModel {
 
   totalElements: number;
   currentPage: number;
+  sorting: ISortRequestModel;
   listData: IProductViewModel[];
 }
 
@@ -58,5 +59,6 @@ export const initialState: IProductListStateModel = {
   notifications: [],
   errors: {
     messages: []
-  }
+  },
+  sorting: null
 };

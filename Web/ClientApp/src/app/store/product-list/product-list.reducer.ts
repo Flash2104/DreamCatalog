@@ -19,14 +19,13 @@ export function productListReducer(state: IProductListStateModel = initialState,
       return model;
     }
     case ProductListActionTypes.GetVolumeComplete: {
-      const actionComplete = action as ProductListGetVolumeCompleteAction;
       model.isLoading = false;
-      // model.volume = actionComplete.payload;
       return model;
     }
     case ProductListActionTypes.Load: {
-      const actionComplete = action as ProductListLoadAction;
-      model.currentPage = actionComplete.payload.page;
+      const actionLoad = action as ProductListLoadAction;
+      model.currentPage = actionLoad.payload.page;
+      model.sorting = actionLoad.payload.sort;
       model.isLoading = true;
       return model;
     }

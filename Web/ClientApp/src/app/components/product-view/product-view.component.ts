@@ -95,7 +95,6 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
               btoa(atob(this.image.base64String as string));
               this.image.base64String = 'data:image/jpg;base64,' + this.image.base64String;
             } catch (e) {
-              // this.image.base64String = st.changed.image.base64String;
             }
           } else {
             this.image = null;
@@ -125,7 +124,6 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
           title: file.name,
           base64String: reader.result as string
         }
-        // this.imageFormControl.patchValue(model, { emitEvent: true });
         this.product.image = this.image;
         this._store.dispatch(new ProductAddChangeAction(this.product));
         // need to run CD since file load runs outside of zone
@@ -147,6 +145,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
   }
 
   onCancelChanges() {
+    document.getElementById('image_uploads')['value'] = ''; 
     this._store.dispatch(new ProductCancelChangesAction());
   }
 

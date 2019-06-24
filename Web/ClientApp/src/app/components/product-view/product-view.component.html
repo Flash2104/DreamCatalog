@@ -16,10 +16,9 @@
         </div>
       </div>
       <button mat-button type="button" class="btn btn-outline-secondary p-0 mr-2 px-2" (click)="onSave()"
-        [disabled]="!isChanged || !productForm.valid"> <i class="fa fa-save"></i>
-        Сохранить</button>
-      <button mat-button type="button" class="btn btn-outline-secondary p-0 px-2" (click)="onCancelChanges()"><i
-          class="fa fa-ban"></i> Отменить</button>
+        [disabled]="!isChanged || !productForm.valid"> <i class="fa fa-save"></i> Сохранить</button>
+      <button mat-button type="button" class="btn btn-outline-secondary p-0 px-2" (click)="onCancelChanges()"
+        [disabled]="!isChanged"> <i class="fa fa-ban"></i> Отменить</button>
     </div>
     <hr />
     <form class="border" [formGroup]="productForm">
