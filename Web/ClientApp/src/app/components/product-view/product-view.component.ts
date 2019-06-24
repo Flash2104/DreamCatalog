@@ -7,10 +7,10 @@ import { IAppStore } from 'src/app/store/storeRootModule';
 import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction, ProductCreateAction, ProductUpdateAction } from 'src/app/store/product/product.actions';
 import { filter } from 'rxjs/operators';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { IProductValidateError, IProductUpdateRequestModel, IImageModel } from 'src/app/store/product/product.model';
+import { IProductValidateError, IProductUpdateRequestModel, IImageModel, IProductModel } from 'src/app/store/product/product.model';
 import { RouteService } from 'src/app/services/route.service';
 import { NotificationComponent } from '../common/notifications/notification.component';
-import { validateFileTypes, validateNumber, validateInteger } from 'src/app/services/helper';
+import { validateNumber, validateInteger } from 'src/app/services/helper';
 import { ErrorComponent } from '../common/errors/error.component';
 
 @Component({
@@ -26,6 +26,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
   isChanged: boolean;
   isCreate: boolean;
   image: IImageModel;
+  product: IProductModel;
   errors: IProductValidateError[] = [];
 
   titleFormControl: FormControl;
@@ -77,6 +78,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
     });
 
     this.productForm.valueChanges.pipe(this.takeUntilDestroyed()).subscribe((product) => {
+      product.image = this.image;
       this._store.dispatch(new ProductAddChangeAction(product));
     })
 
@@ -98,8 +100,8 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
           } else {
             this.image = null;
           }
-          const patchedValue = { ...st.changed };
-          this.productForm.patchValue(patchedValue, { emitEvent: false });
+          this.product = { ...st.changed };
+          this.productForm.patchValue(this.product, { emitEvent: false });
         }
         if (!!st.notifications && st.notifications.length > 0) {
           this._snackBar.openFromComponent(NotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.notifications.pop() } })
@@ -124,9 +126,8 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
           base64String: reader.result as string
         }
         // this.imageFormControl.patchValue(model, { emitEvent: true });
-        const product = this.productForm.value;
-        product['image'] = this.image;
-        this._store.dispatch(new ProductAddChangeAction(product));
+        this.product.image = this.image;
+        this._store.dispatch(new ProductAddChangeAction(this.product));
         // need to run CD since file load runs outside of zone
         this.cd.markForCheck();
       };
