@@ -44,34 +44,26 @@ export class CategoryComponent extends BaseDestroyComponent implements OnInit {
         this._store.dispatch(new CategoryLoadAction(this.categoryId));
       });
 
-      this._store.select(s => s.productModuleStore)
+    this._store.select(s => s.productModuleStore)
       .pipe(this.takeUntilDestroyed())
       .subscribe(st => {
         this.isProductChanged = st.isChanged;
       });
   }
 
+  hasSelected() {
+    return !!this.productList.selection && this.productList.selection.selected && this.productList.selection.selected.length > 0;
+  }
+
   onDelete() {
     this.productList.delete();
   }
 
-
   onClose() {
-    if (this.isProductChanged) {
-      this.openDialog();
-    } else {
-      this._routeSrv.navigateToCatalog();
-    }
+      this._routeSrv.navigateToCatalog(true);
   }
 
-  private openDialog() {
-    const dialogRef = this.dialog.open(CloseDialogComponent);
-
-    dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
-      if (result) {
-        this._store.dispatch(new ProductCancelChangesAction());
-        this._routeSrv.navigateToCatalog();
-      }
-    });
+  onCreateProduct() {
+    this._routeSrv.navigateToCreateProduct(this.categoryId, true);
   }
 }

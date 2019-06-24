@@ -131,7 +131,12 @@ namespace Web.Services
             {
                 await PrepareImage(model, create);
                 var created = await _productRepository.Add(create);
-                return new SuccessResponse<ProductDto>(_mapper.Map<ProductDto>(created));
+                var result = _mapper.Map<ProductDto>(created);
+                if (result.Image != null)
+                {
+                    result.Image.Base64String = model.Image?.Base64String;
+                }
+                return new SuccessResponse<ProductDto>(result);
             }
             catch (Exception ex)
             {
@@ -157,7 +162,12 @@ namespace Web.Services
             {
                 await PrepareImage(model, update);
                 var updated = await _productRepository.Update(update);
-                return new SuccessResponse<ProductDto>(_mapper.Map<ProductDto>(updated));
+                var result = _mapper.Map<ProductDto>(updated);
+                if (result.Image != null)
+                {
+                    result.Image.Base64String = model.Image?.Base64String;
+                }
+                return new SuccessResponse<ProductDto>(result);
             }
             catch (Exception ex)
             {

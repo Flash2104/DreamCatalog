@@ -1,7 +1,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CategoryService } from './category.service';
 import { Injectable } from '@angular/core';
-import { catchError, switchMap, map, exhaustMap } from 'rxjs/operators';
+import { catchError, switchMap, map, exhaustMap, debounceTime } from 'rxjs/operators';
 import { CategoryActionTypes, CategoryLoadCompleteAction, CategoryLoadAction, CategoryErrorAction } from './category.actions';
 import { of } from 'rxjs';
 import { ICategoryModel } from './category.model';
@@ -23,7 +23,8 @@ export class CategoryEffects {
   loadCategory$ = this.actions$
     .pipe(
       ofType(CategoryActionTypes.Load),
-      exhaustMap((action: CategoryLoadAction) => this._srv.get(action.payload.id)),
+      debounceTime(200),
+      switchMap((action: CategoryLoadAction) => this._srv.get(action.payload.id)),
       map((resp: IResponse<ICategoryModel>) => {
         if (!!resp && resp.success) {
           return new CategoryLoadCompleteAction(resp.data);

@@ -19,9 +19,9 @@ export enum ProductActionTypes {
 export class ProductErrorAction implements Action {
 
   type = ProductActionTypes.Error;
-  payload: string;
+  payload: string[];
 
-  constructor(payload: string) {
+  constructor(payload: string[]) {
     this.payload = payload;
   }
 }

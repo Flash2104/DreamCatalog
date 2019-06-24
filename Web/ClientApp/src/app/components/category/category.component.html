@@ -11,9 +11,9 @@
                 class="fa fa-close"></i></button></div>
         </div>
         <div>
-          <button mat-button type="button" class="btn btn-outline-secondary p-0 mr-2 px-2" routerLink="product/create"> <i
+          <button mat-button type="button" class="btn btn-outline-secondary p-0 mr-2 px-2" (click)="onCreateProduct()"> <i
               class="fa fas fa-plus-square"></i> Новый товар</button>
-          <button mat-button type="button" class="btn btn-outline-secondary p-0 px-2" (click)="onDelete()"><i
+          <button mat-button type="button" class="btn btn-outline-secondary p-0 px-2" (click)="onDelete()" [disabled]="!hasSelected()"><i
               class="fa fas fa-trash"></i>
             Удалить</button>
         </div>
@@ -27,5 +27,5 @@
   </div>
 </div>
 <ng-template #loading>
-  <app-loading [diameter]="20"> </app-loading>
+  <app-loading [diameter]="24"> </app-loading>
 </ng-template>

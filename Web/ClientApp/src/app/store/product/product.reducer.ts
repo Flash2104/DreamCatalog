@@ -61,14 +61,15 @@ export function productReducer(state: IProductStateModel = initialState, action:
       model.product = { ...loadCompleteAction.payload };
       model.changed = { ...loadCompleteAction.payload };
       model.isLoading = false;
+      model.isChanged = false;
       return model;
     }
     case (ProductActionTypes.Error): {
       const payload = (<ProductErrorAction>action).payload;
       model.isLoading = false;
-      model.isChanged = false;
-      model.changed = { ...model.product };
-      model.errors.messages.push(payload);
+      for (let i = 0; i < payload.length; i++) {
+        model.errors.messages.push(payload[i]);
+      }
       return model;
     }
     default:

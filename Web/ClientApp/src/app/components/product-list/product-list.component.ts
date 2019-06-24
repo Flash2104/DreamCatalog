@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BaseDestroyComponent } from '../BaseDestroyComponent';
 import { IProductViewModel, ProductListRequestModel, ISortRequestModel } from 'src/app/store/product-list/product-list.model';
@@ -18,8 +18,9 @@ import { MatSnackBar } from '@angular/material';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent extends BaseDestroyComponent implements OnInit {
+export class ProductListComponent extends BaseDestroyComponent implements OnInit, AfterViewInit {
 
+  isLoading: boolean = false;
   page: number = 1;
   volume: number = 5;
   categoryId: number;
@@ -31,8 +32,8 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   selection = new SelectionModel<IProductViewModel>(true, []);
   store$ = this._store.select(s => s.productListModuleStore);
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(PaginatorComponent, { static: true }) paginator: PaginatorComponent;
+  @ViewChildren(MatSort) sorts: QueryList<MatSort>;
+  sort: MatSort;
 
   constructor(
     private _store: Store<IAppStore>,
@@ -43,12 +44,6 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   ngOnInit() {
-    this.sort.sortChange
-      .pipe(this.takeUntilDestroyed())
-      .subscribe(pm => {
-        this.loadList();
-      });
-
     this.route.paramMap
       .pipe(this.takeUntilDestroyed())
       .subscribe(pm => {
@@ -62,11 +57,25 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
         filter(st => !!st && !!st.listData))
       .subscribe(st => {
         this.totalElements = st.totalElements;
+        this.isLoading = st.isLoading;
         this.dataSource = new MatTableDataSource(st.listData);
         this.selection.clear();
         if (!!st.notifications && st.notifications.length > 0) {
           this._snackBar.openFromComponent(NotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.notifications.pop() } })
         }
+      });
+  }
+
+  public ngAfterViewInit() {
+    this.sorts.changes
+      .pipe(this.takeUntilDestroyed())
+      .subscribe((sorts: QueryList<MatSort>) => {
+        this.sort = sorts.first;
+        this.sort.sortChange
+          .pipe(this.takeUntilDestroyed())
+          .subscribe(pm => {
+            this.loadList();
+          });
       });
   }
 
@@ -76,7 +85,10 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
   }
 
   private loadList() {
-    const sorting = <ISortRequestModel>{ column: this.sort.active, direction: this.sort.direction };
+    let sorting: ISortRequestModel = null;
+    if (!!this.sort) {
+      sorting = <ISortRequestModel>{ column: this.sort.active, direction: this.sort.direction };
+    }
     let request = new ProductListRequestModel(this.categoryId, sorting, this.page, this.volume);
     this._store.dispatch(new ProductListLoadAction(request));
   }

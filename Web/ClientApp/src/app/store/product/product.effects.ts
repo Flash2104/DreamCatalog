@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductService } from './product.service';
 import { ProductActionTypes, ProductCreateAction, ProductCreateCompleteAction, ProductLoadAction, ProductUpdateAction, ProductUpdateCompleteAction, ProductLoadCompleteAction, ProductInitAction, ProductErrorAction } from './product.actions';
-import { switchMap, map, catchError, concatMap, exhaustMap } from 'rxjs/operators';
+import { switchMap, map, catchError, concatMap, exhaustMap, debounce, debounceTime } from 'rxjs/operators';
 import { IProductModel } from './product.model';
 import { BaseDestroyComponent } from 'src/app/components/BaseDestroyComponent';
 import { of, pipe } from 'rxjs';
@@ -33,9 +33,7 @@ export class ProductEffects extends BaseDestroyComponent {
       if (res.success) {
         return new ProductCreateCompleteAction(res.data);
       }
-      // let messages: string = prepareErrorMessage(res);
-
-      return new ProductErrorAction('Ошибки при получении продукта:\r\n ');
+      return new ProductErrorAction(res.errors);
     }),
     catchError(error => of(console.log('Ошибка createProduct effect!: ', error)))
   );
@@ -65,7 +63,7 @@ export class ProductEffects extends BaseDestroyComponent {
         return new ProductUpdateCompleteAction(res.data);
       }
       // let messages: string = prepareErrorMessage(res);
-      return new ProductErrorAction('Ошибки при получении продукта:\r\n ');
+      return new ProductErrorAction(res.errors);
     }),
     catchError(error => of(console.log('Ошибка updateProduct effect!: ', error)))
   );
@@ -92,7 +90,8 @@ export class ProductEffects extends BaseDestroyComponent {
   @Effect()
   loadProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.Load),
-    exhaustMap((action: ProductLoadAction) => this._srv.get(action.payload)),
+    debounceTime(200),
+    switchMap((action: ProductLoadAction) => this._srv.get(action.payload)),
     map((res: IResponse<IProductModel>) => {
       if (res.success) {
         return new ProductLoadCompleteAction(res.data);
@@ -108,7 +107,7 @@ export class ProductEffects extends BaseDestroyComponent {
         }
       }
       // let messages: string = prepareErrorMessage(res);
-      return new ProductErrorAction('Ошибки при получении продукта:\r\n');
+      return new ProductErrorAction(res.errors);
     }),
     catchError(error => of(console.log('Ошибка loadProduct effect!: ', error)))
   );

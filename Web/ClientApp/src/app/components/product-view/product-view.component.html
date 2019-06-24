@@ -25,16 +25,15 @@
     <form class="border" [formGroup]="productForm">
       <div>
         <p>Фото</p>
-          <div class="img-preview">
-            <img *ngIf="!!imageBase64" src="{{imageBase64}}">
-            <img *ngIf="!imageBase64" [src]="default">
-          </div>
-          <div class="">
-            <label mat-button for="image_uploads" type="button" class="btn btn-outline-secondary"><i
+        <div class="img-preview">
+          <img *ngIf="!!image && !!image.base64String" src="{{image.base64String}}">
+          <img *ngIf="!image || !image.base64String" src="assets/default.jpg">
+        </div>
+        <div class="">
+          <label mat-button for="image_uploads" type="button" class="btn btn-outline-secondary"><i
               class="fa fas fa-upload"></i> Загрузить</label>
-          </div>
-        <input type="file" id="image_uploads" hidden accept=".jpg, .jpeg, .png" (change)="onFileChange($event)"
-          formControlName="image">
+        </div>
+        <input type="file" id="image_uploads" hidden accept=".jpg, .jpeg, .png" (change)="onFileChange($event)">
       </div>
 
       <div class="form-group">
