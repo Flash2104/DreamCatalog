@@ -1,4 +1,4 @@
-# DreamCatalog
+# This is test task app - DreamCatalog
 # For server part:
 # - change if need a connectionString in appsettings.json file;
 # - run:
