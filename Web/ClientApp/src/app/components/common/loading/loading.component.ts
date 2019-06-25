@@ -7,8 +7,8 @@ import { BaseDestroyComponent } from '../../BaseDestroyComponent';
   styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent extends BaseDestroyComponent implements OnInit {
-  @Input() diameter : number = 40;
-  @Input() customStyle : string = "";
+  @Input() diameter: number = 40;
+
   constructor() {
     super();
   }

@@ -38,7 +38,7 @@ namespace Web.Controllers
             {
                 return await _productService.CreateProduct(model);
             }
-            return new FailureResponse(GetErrorMessages());
+            return new FailureResponse<ProductDto>(GetErrorMessages());
         }
 
         [HttpPut("update")]
@@ -48,7 +48,7 @@ namespace Web.Controllers
             {
                 return await _productService.UpdateProduct(model);
             }
-            return new FailureResponse(GetErrorMessages());
+            return new FailureResponse<ProductDto>(GetErrorMessages());
         }
 
         [HttpDelete("delete-products")]

@@ -17,12 +17,7 @@ export class ProductService {
     //return this.getMock(id);
     let params = new HttpParams().set('id', id.toString());
     const res$ = this._http.get<IResponse<IProductModel>>(`${PRODUCT_LIST_URL}/get`, { headers: HTTP_HEADERS, params: params });
-    return res$.pipe(
-      catchError(error => {
-        console.log('Server error: ', error);
-        return of(<IResponse<IProductModel>>{ data: {}, errors: error, success: false });
-      })
-    );
+    return this.pipeErrors(res$);
   }
 
   private getMock(id: number) {
@@ -35,12 +30,23 @@ export class ProductService {
       request.image.base64String = prepareBase64Data(request.image.base64String as string);
     }
     const res$ = this._http.post<IResponse<IProductModel>>(`${PRODUCT_LIST_URL}/create`, request, { headers: HTTP_HEADERS });
-    return res$.pipe(
-      catchError(error => {
-        console.log('Server error: ', error);
-        return of(<IResponse<IProductModel>>{ data: {}, errors: error, success: false });
-      })
-    );
+    return this.pipeErrors(res$);
+  }
+
+  private pipeErrors( result : Observable<any>) {
+    return result.pipe(catchError(ex => {
+      console.log('Server error: ', ex);
+      let errors = [];
+      if(!!ex.error) {
+        errors.push(ex.error.title)
+        if(!!ex.error.errors){
+          for(let k in ex.error.errors){
+            errors.push(`${k}: ${ex.error.errors[k]}`)
+          }
+        }
+      }
+      return of(<IResponse<IProductModel>>{ data: {}, errors: errors, success: false });
+    }));
   }
 
   // private createMock(request: IProductCreateRequestModel) {
@@ -56,12 +62,7 @@ export class ProductService {
       request.image.base64String = prepareBase64Data(request.image.base64String as string);
     }
     const res$ = this._http.put<IResponse<IProductModel>>(`${PRODUCT_LIST_URL}/update`, request, { headers: HTTP_HEADERS });
-    return res$.pipe(
-      catchError(error => {
-        console.log('Server error: ', error);
-        return of(<IResponse<IProductModel>>{ data: {}, errors: error, success: false });
-      })
-    );
+    return this.pipeErrors(res$);
   }
 
   // private updateMock(request: IProductUpdateRequestModel) {

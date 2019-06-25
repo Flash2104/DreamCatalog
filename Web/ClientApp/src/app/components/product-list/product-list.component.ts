@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BaseDestroyComponent } from '../BaseDestroyComponent';
 import { IProductViewModel, ProductListRequestModel, ISortRequestModel } from 'src/app/store/product-list/product-list.model';
@@ -9,9 +9,8 @@ import { Store } from '@ngrx/store';
 import { ProductListLoadAction, ProductsDeleteAction } from 'src/app/store/product-list/product-list.actions';
 import { filter } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
-import { PaginatorComponent } from '../common/paginator/paginator.component';
-import { NotificationComponent } from '../common/notifications/notification.component';
 import { MatSnackBar } from '@angular/material';
+import { ToastNotificationComponent } from '../common/toast-notification/toast-notification.component';
 
 @Component({
   selector: 'app-product-list',
@@ -61,7 +60,10 @@ export class ProductListComponent extends BaseDestroyComponent implements OnInit
         this.dataSource = new MatTableDataSource(st.listData);
         this.selection.clear();
         if (!!st.notifications && st.notifications.length > 0) {
-          this._snackBar.openFromComponent(NotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.notifications.pop() } })
+          this._snackBar.openFromComponent(ToastNotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { messages: st.notifications, color: 'green' } })
+        }
+        if (!!st.errors && !!st.errors.messages && st.errors.messages.length > 0) {
+          this._snackBar.openFromComponent(ToastNotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { messages: st.errors.messages, color: 'red' } })
         }
       });
   }

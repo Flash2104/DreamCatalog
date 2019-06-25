@@ -1,0 +1,19 @@
+<!-- <span class="app-error">
+  {{message}}
+</span> -->
+<div class="row m-0">
+  <div class="col p-0 pl-2">
+    <ng-container *ngFor="let message of messages; let i = index">
+      <div>
+        <span [style.color]="color">
+          {{message}}
+        </span>
+      </div>
+    </ng-container>
+  </div>
+  <div class="col-1 p-0">
+      <button type="button" class="btn btn-outline-secondary float-right border-0" (click)="onClose()">
+        <i class="fa fa-close"></i>
+      </button>
+    </div>
+</div>

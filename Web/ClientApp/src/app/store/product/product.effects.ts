@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductService } from './product.service';
 import { ProductActionTypes, ProductCreateAction, ProductCreateCompleteAction, ProductLoadAction, ProductUpdateAction, ProductUpdateCompleteAction, ProductLoadCompleteAction, ProductInitAction, ProductErrorAction } from './product.actions';
-import { switchMap, map, catchError, concatMap, exhaustMap, debounce, debounceTime } from 'rxjs/operators';
+import { switchMap, map, catchError, concatMap, exhaustMap, debounceTime, concat } from 'rxjs/operators';
 import { IProductModel } from './product.model';
 import { BaseDestroyComponent } from 'src/app/components/BaseDestroyComponent';
 import { of, pipe } from 'rxjs';
@@ -13,6 +13,7 @@ import { State } from '@ngrx/store';
 import { IAppStore } from '../storeRootModule';
 import { IResponse } from '../models';
 import { prepareErrorMessage } from 'src/app/services/helper';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable()
 export class ProductEffects extends BaseDestroyComponent {
@@ -42,6 +43,12 @@ export class ProductEffects extends BaseDestroyComponent {
   createCompleteProduct$ = this.actions$.pipe(
     ofType(ProductActionTypes.CreateComplete),
     map((action: ProductCreateCompleteAction) => {
+      const categoryId = this.getCategory();
+      if (!!categoryId) {
+        this._routeSrv.navigateToProduct(categoryId, action.payload.id);
+      } else {
+        this._routeSrv.navigateToCatalog();
+      }
       return this.prepareLoadListAction(action);
     }),
     catchError(error => of(console.log('Ошибка createProduct effect!: ', error)))
@@ -83,9 +90,7 @@ export class ProductEffects extends BaseDestroyComponent {
         return new ProductLoadCompleteAction(res.data);
       }
       else {
-        const categoryId = !!this._state.value && !!this._state.value.categoryModuleStore
-          && !!this._state.value.categoryModuleStore.category
-          && this._state.value.categoryModuleStore.category.id;
+        const categoryId = this.getCategory();
         if (!!categoryId) {
           this._routeSrv.navigateToCreateProduct(categoryId);
         } else {
@@ -97,6 +102,12 @@ export class ProductEffects extends BaseDestroyComponent {
     }),
     catchError(error => of(console.log('Ошибка loadProduct effect!: ', error)))
   );
+
+  private getCategory() {
+    return !!this._state.value && !!this._state.value.categoryModuleStore
+      && !!this._state.value.categoryModuleStore.category
+      && this._state.value.categoryModuleStore.category.id;
+  }
 
   private prepareLoadListAction(action: ProductUpdateCompleteAction) {
     const payload = action.payload;

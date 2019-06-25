@@ -13,7 +13,9 @@ export enum ProductActionTypes {
   Load = 'LoadProduct',
   LoadComplete = 'LoadProductComplete',
 
-  Error = 'ErrorProduct'
+  Error = 'ErrorProduct',
+  CleanUpNotifications = 'CleanUpProductNotifications',
+  CleanUpErrors = 'CleanUpProductErrors'
 }
 
 export class ProductErrorAction implements Action {
@@ -24,6 +26,14 @@ export class ProductErrorAction implements Action {
   constructor(payload: string[]) {
     this.payload = payload;
   }
+}
+
+export class ProductCleanUpErrorsAction implements Action {
+  type = ProductActionTypes.CleanUpErrors;
+}
+
+export class ProductCleanUpNotificationsAction implements Action {
+  type = ProductActionTypes.CleanUpNotifications;
 }
 
 export class ProductAddChangeAction implements Action {

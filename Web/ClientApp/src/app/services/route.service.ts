@@ -1,21 +1,19 @@
 import { Injectable } from "@angular/core";
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { BaseDestroyComponent } from '../components/BaseDestroyComponent';
 import { CloseDialogComponent } from '../components/common/close-dialog/close-dialog.component';
 import { ProductCancelChangesAction } from '../store/product/product.actions';
 import { State, Store } from '@ngrx/store';
 import { IAppStore } from '../store/storeRootModule';
 
 @Injectable({ providedIn: 'root' })
-export class RouteService extends BaseDestroyComponent {
+export class RouteService {
   constructor(
     private router: Router,
     public dialog: MatDialog,
     private _store: Store<IAppStore>,
     private _state: State<IAppStore>
   ) {
-    super();
   }
 
   navigateToCatalog(checkChanges = false) {
@@ -47,7 +45,7 @@ export class RouteService extends BaseDestroyComponent {
       !!this._state.value.productModuleStore &&
       this._state.value.productModuleStore.isChanged) {
       const dialogRef = this.dialog.open(CloseDialogComponent);
-      dialogRef.afterClosed().pipe(this.takeUntilDestroyed()).subscribe(result => {
+      dialogRef.afterClosed().subscribe(result => {
         if (result) {
           this.onCancelChanges();
           this.router.navigate(commands);

@@ -4,14 +4,13 @@ import { BaseDestroyComponent } from '../BaseDestroyComponent';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { IAppStore } from 'src/app/store/storeRootModule';
-import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction, ProductCreateAction, ProductUpdateAction } from 'src/app/store/product/product.actions';
+import { ProductLoadAction, ProductInitAction, ProductAddChangeAction, ProductCancelChangesAction, ProductCreateAction, ProductUpdateAction, ProductCleanUpNotificationsAction, ProductCleanUpErrorsAction } from 'src/app/store/product/product.actions';
 import { filter } from 'rxjs/operators';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { IProductValidateError, IProductUpdateRequestModel, IImageModel, IProductModel } from 'src/app/store/product/product.model';
 import { RouteService } from 'src/app/services/route.service';
-import { NotificationComponent } from '../common/notifications/notification.component';
 import { validateNumber, validateInteger } from 'src/app/services/helper';
-import { ErrorComponent } from '../common/errors/error.component';
+import { ToastNotificationComponent } from '../common/toast-notification/toast-notification.component';
 
 @Component({
   selector: 'app-product-view',
@@ -103,10 +102,10 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
           this.productForm.patchValue(this.product, { emitEvent: false });
         }
         if (!!st.notifications && st.notifications.length > 0) {
-          this._snackBar.openFromComponent(NotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.notifications.pop() } })
+          this._snackBar.openFromComponent(ToastNotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 10000, data: { messages: st.notifications, color: 'green' } });
         }
         if (!!st.errors && !!st.errors.messages && st.errors.messages.length > 0) {
-          this._snackBar.openFromComponent(ErrorComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 3000, data: { message: st.errors.messages.pop() } })
+          this._snackBar.openFromComponent(ToastNotificationComponent, { verticalPosition: 'bottom', horizontalPosition: 'right', duration: 10000, data: { messages: st.errors.messages, color: 'red', isError: true } });
         }
       });
   }
@@ -145,7 +144,7 @@ export class ProductViewComponent extends BaseDestroyComponent implements OnInit
   }
 
   onCancelChanges() {
-    document.getElementById('image_uploads')['value'] = ''; 
+    document.getElementById('image_uploads')['value'] = '';
     this._store.dispatch(new ProductCancelChangesAction());
   }
 

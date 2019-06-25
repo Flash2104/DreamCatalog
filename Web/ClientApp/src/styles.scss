@@ -35,3 +35,16 @@ hr {
 .mat-spinner circle {
   stroke: #6c757d;
 }
+
+::ng-deep {
+  .mat-snack-bar-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    width: 100%;
+    max-width: 800px !important;
+  }
+
+  .mat-snack-bar-handset {
+    max-width: 800px !important;
+  }
+}

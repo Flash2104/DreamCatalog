@@ -15,6 +15,8 @@ export function productReducer(state: IProductStateModel = initialState, action:
     case (ProductActionTypes.AddChange): {
       const addChange = action as ProductAddChangeAction;
       model.isChanged = true;
+      model.notifications = [];
+     // model.errors.messages = [];
       model.changed = { ...addChange.payload };
       return model;
     }
@@ -24,6 +26,8 @@ export function productReducer(state: IProductStateModel = initialState, action:
       return model;
     }
     case (ProductActionTypes.Init): {
+      initialState.notifications = [];
+      initialState.errors.messages = [];
       return initialState;
     }
     case (ProductActionTypes.Create): {
@@ -68,8 +72,18 @@ export function productReducer(state: IProductStateModel = initialState, action:
       const payload = (<ProductErrorAction>action).payload;
       model.isLoading = false;
       for (let i = 0; i < payload.length; i++) {
-        model.errors.messages.push(payload[i]);
+        if (!model.errors.messages.includes(payload[i])) {
+          model.errors.messages.push(payload[i]);
+        }
       }
+      return model;
+    }
+    case (ProductActionTypes.CleanUpNotifications): {
+      model.notifications = [];
+      return model;
+    }
+    case (ProductActionTypes.CleanUpErrors): {
+      model.errors.messages = [];
       return model;
     }
     default:

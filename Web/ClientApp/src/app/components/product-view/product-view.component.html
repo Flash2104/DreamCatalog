@@ -23,10 +23,14 @@
     <hr />
     <form class="border" [formGroup]="productForm">
       <div>
-        <p>Фото</p>
+        <p>Фото<span style="color: red">*</span></p>
         <div class="img-preview">
           <img *ngIf="!!image && !!image.base64String" src="{{image.base64String}}">
           <img *ngIf="!image || !image.base64String" src="assets/default.jpg">
+          <div class="form-text text-danger">
+            <!-- errors -->
+            <small *ngIf="!image || !image.base64String">Добавьте картинку</small>
+          </div>
         </div>
         <div class="">
           <label mat-button for="image_uploads" type="button" class="btn btn-outline-secondary"><i
@@ -36,7 +40,7 @@
       </div>
 
       <div class="form-group">
-        <label for="title-control">Название</label>
+        <label for="title-control">Название<span style="color: red">*</span></label>
         <input id="title-control" class="form-control" type="text" formControlName="title">
         <div class="form-text text-danger">
           <!-- errors -->
@@ -44,25 +48,24 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="price-control">Цена</label>
+        <label for="price-control">Цена<span style="color: red">*</span></label>
         <input id="price-control" class="form-control" type="number" formControlName="price">
-        <div class="form-text text-muted">
+        <div class="form-text text-danger">
           <!-- errors -->
           <small *ngIf="priceFormControl.errors && priceFormControl.errors.required">{{requiredMessage}}</small>
-          <small *ngIf="priceFormControl.errors && priceFormControl.errors.numberKey">Упс, не число!</small>
+          <small *ngIf="priceFormControl.errors && priceFormControl.errors.numberKey">Должно быть число</small>
         </div>
 
       </div>
       <div class="form-group">
-        <label for="quantity-control">Количество</label>
-        <input id="quantity-control" class="form-control" type="number" placeholder="Количество"
-          formControlName="quantity">
+        <label for="quantity-control">Количество<span style="color: red">*</span></label>
+        <input id="quantity-control" class="form-control" type="number" formControlName="quantity">
         <div class="form-text text-danger">
           <!-- errors -->
           <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.required">{{requiredMessage}}</small>
-          <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.numberKey">Упс, не число!</small>
-          <small *ngIf="quantityFormControl.errors && quantityFormControl.errors.integer">Количество должно быть
-            целочисленным!</small>
+          <small
+            *ngIf="quantityFormControl.errors && (quantityFormControl.errors.numberKey ||  quantityFormControl.errors.integer)">Должно
+            быть целое число!</small>
         </div>
       </div>
     </form>

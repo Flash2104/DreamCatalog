@@ -58,9 +58,11 @@ namespace Web.Data
                 "iam.jpg",
                 "matchbox.jpg",
                 "radio.jpg",
-                "tele.jpg"
+                "tele.jpg",
+                "s.png",
+                "pants.png"
             };
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 7; i++)
             {
                 var path = "./Images/" + names[i];
                 images.Add(new DbImage
@@ -92,7 +94,7 @@ namespace Web.Data
                     CategoryId = categoryId,
                     Price = price,
                     Quantity = quantity,
-                    ImageId = random.Next(1, 5)
+                    ImageId = random.Next(1, 8)
                 });
             }
             context.Products.AddRange(products);

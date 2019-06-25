@@ -43,8 +43,7 @@ import { PaginatorComponent } from './components/common/paginator/paginator.comp
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CloseDialogComponent } from './components/common/close-dialog/close-dialog.component';
-import { NotificationComponent } from './components/common/notifications/notification.component';
-import { ErrorComponent } from './components/common/errors/error.component';
+import { ToastNotificationComponent } from './components/common/toast-notification/toast-notification.component';
 
 @NgModule({
   declarations: [
@@ -58,8 +57,7 @@ import { ErrorComponent } from './components/common/errors/error.component';
     CategoryComponent,
     PaginatorComponent,
     CloseDialogComponent,
-    NotificationComponent,
-    ErrorComponent
+    ToastNotificationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -96,7 +94,7 @@ import { ErrorComponent } from './components/common/errors/error.component';
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
     RouterModule.forRoot([
-      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      { path: '', redirectTo: '/catalog', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       {
         path: 'catalog', component: CatalogComponent, children: [
@@ -112,6 +110,6 @@ import { ErrorComponent } from './components/common/errors/error.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [CloseDialogComponent, NotificationComponent, ErrorComponent]
+  entryComponents: [CloseDialogComponent, ToastNotificationComponent]
 })
 export class AppModule { }

@@ -8,17 +8,17 @@ namespace Web.Models.Request
     {
         public int? Id { get; set; }
 
-        [Required(ErrorMessage = "Поле \"Назвение\" должно быть заполнено")]
+        [Required(ErrorMessage = "Поле \"Название\" должно быть заполнено")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Поле \"Цена\" должно быть заполнено")]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
         [Required(ErrorMessage = "Поле \"Количество\" должно быть заполнено")]
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
 
         [Required(ErrorMessage = "Продукт без категории")]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         [Required(ErrorMessage = "\"Фото\" должно быть добавлено")]
         public ImageDto Image { get; set; }
